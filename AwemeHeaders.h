@@ -1320,7 +1320,3 @@ static CGFloat gStartVal = 0.0;
 @interface AWEPlayInteractionProgressContainerView : UIView
 - (void)dyyy_applyShrinkIfNeeded;
 @end
-
-@interface AWEPlayInteractionProgressContainerView : UIView
-@end
-
