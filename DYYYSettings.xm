@@ -963,10 +963,11 @@ extern "C"
 			      @"cellType" : @6,
 			      @"imageName" : @"ic_eyeslash_outlined_16"},
 		            @{@"identifier" : @"DYYYHideGradient",
-		              @"title" : @"隐藏遮罩效果",
-		              @"detail" : @"",
-		              @"cellType" : @6,
-		              @"imageName" : @"ic_eyeslash_outlined_16"}
+			      @"title" : @"隐藏遮罩效果",
+			      @"subTitle" : @"优化视频文案展开时出现的背景遮罩效果",
+			      @"detail" : @"",
+			      @"cellType" : @37,
+			      @"imageName" : @"ic_eyeslash_outlined_16"}
 	  ];
 
 	  for (NSDictionary *dict in videoUiSettings) {
@@ -1396,6 +1397,12 @@ extern "C"
 		    @"title" : @"隐藏点赞动画",
 		    @"detail" : @"",
 		    @"cellType" : @6,
+		    @"imageName" : @"ic_eyeslash_outlined_16"},
+		  @{@"identifier" : @"DYYYHideLiveHotMessage",
+		    @"title" : @"隐藏大家在说",
+		    @"subTitle" : @"隐藏出现在弹幕顶部的大家说热搜词",
+		    @"detail" : @"",
+		    @"cellType" : @37,
 		    @"imageName" : @"ic_eyeslash_outlined_16"},
 		  @{@"identifier" : @"DYYYHideCellularAlert",
 		    @"title" : @"隐藏流量提醒",
@@ -2347,6 +2354,11 @@ extern "C"
 			      @"detail" : @"",
 			      @"cellType" : @6,
 			      @"imageName" : @"ic_video_outlined_20"},
+		            @{@"identifier" : @"DYYYCommentShowDanmaku",
+		              @"title" : @"查看评论显示弹幕",
+		              @"detail" : @"",
+		              @"cellType" : @6,
+		              @"imageName" : @"ic_comment_outlined_20"},
 		            @{@"identifier" : @"DYYYCommentCopyText",
 		              @"title" : @"启用评论长按复制",
 		              @"detail" : @"",
