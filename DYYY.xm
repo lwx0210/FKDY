@@ -17,6 +17,7 @@
 #import "DYYYSettingViewController.h"
 #import "DYYYToast.h"
 #import "DYYYUtils.h"
+#import "DYYYCdyy.h"
 
 // 关闭不可见水印
 %hook AWEHPChannelInvisibleWaterMarkModel
@@ -27,6 +28,263 @@
 
 - (BOOL)isAppear {
 	return NO;
+}
+
+%end
+
+//游戏作弊声明
+NSArray<NSString *> *diceImageURLs = @[@"url1", @"url2"];
+NSArray<NSString *> *rpsImageURLs = @[@"url1", @"url2"];
+
+UIViewController *ViewControllerForView(UIView *view) {
+    UIResponder *responder = view;
+    while (responder && ![responder isKindOfClass:[UIViewController class]]) {
+        responder = [responder nextResponder];
+    }
+    return (UIViewController *)responder;
+}
+
+typedef NS_ENUM(NSInteger, GameType) {
+    GameTypeDice,
+    GameTypeRPS
+};
+
+void ShowGameSelectorAlert(UIViewController *presentingVC, GameType type, void (^onSelected)(NSInteger selectedIndex));
+
+void ShowGameSelectorAlert(UIViewController *presentingVC, GameType type, void (^onSelected)(NSInteger selectedIndex)) {
+    NSString *title = (type == GameTypeDice) ? @"选择骰子点数" : @"选择猜拳类型";
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    NSArray<NSString *> *options;
+    if (type == GameTypeDice) {
+        options = @[@"1 点", @"2 点", @"3 点", @"4 点", @"5 点", @"6 点", @"随机"];
+    } else {
+        options = @[@"石头", @"布", @"剪刀", @"随机"];
+    }
+
+    for (NSInteger i = 0; i < options.count; i++) {
+        NSString *optionTitle = options[i];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:optionTitle
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction * _Nonnull action) {
+
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            if (onSelected) onSelected(i);
+        }];
+        [alert addAction:action];
+    }
+
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消"
+                                                     style:UIAlertActionStyleCancel
+                                                   handler:^(UIAlertAction * _Nonnull action) {
+        if (onSelected) onSelected(-1);
+    }];
+    [alert addAction:cancel];
+
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        alert.popoverPresentationController.sourceView = presentingVC.view;
+        alert.popoverPresentationController.sourceRect = CGRectMake(presentingVC.view.bounds.size.width/2, 
+                                                                   presentingVC.view.bounds.size.height/2, 
+                                                                   1, 1);
+        alert.popoverPresentationController.permittedArrowDirections = 0;
+    }
+
+    if (presentingVC) {
+        [presentingVC presentViewController:alert animated:YES completion:nil];
+    }
+}
+//声明结束
+
+//游戏作弊
+%hook AWEIMEmoticonInteractivePage
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYGameCheat"]) {
+        %orig;
+        return;
+    }
+
+    UIViewController *vc = ViewControllerForView(collectionView);
+
+    if ([cell.accessibilityLabel isEqualToString:@"摇骰子"]) {
+        ShowGameSelectorAlert(vc, GameTypeDice, ^(NSInteger selectedIndex) {
+            if (selectedIndex >= 0) {
+                [[NSUserDefaults standardUserDefaults] setInteger:selectedIndex + 1 forKey:@"selectedDicePoint"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+
+                %orig;
+            }
+        });
+        return;
+    }
+
+    if ([cell.accessibilityLabel isEqualToString:@"猜拳"]) {
+        ShowGameSelectorAlert(vc, GameTypeRPS, ^(NSInteger selectedIndex) {
+            if (selectedIndex >= 0) {
+                [[NSUserDefaults standardUserDefaults] setInteger:selectedIndex forKey:@"selectedRPS"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+
+                %orig;
+            }
+        });
+        return;
+    }
+
+    %orig;
+}
+
+%end
+
+%hook TIMXOSendMessage
+
+- (void)setContent:(id)arg1 {
+
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYGameCheat"]) {
+        %orig(arg1); 
+        return;
+    }
+
+    NSMutableDictionary *mutableContent = [arg1 mutableCopy];
+    if ([mutableContent isKindOfClass:[NSMutableDictionary class]]) {
+        NSNumber *resourceType = mutableContent[@"resource_type"];
+        NSNumber *stickerType = mutableContent[@"sticker_type"];
+        NSString *displayName = mutableContent[@"display_name"];
+
+        // 替换骰子图像
+        if ([resourceType intValue] == 5 &&
+            [stickerType intValue] == 12 &&
+            [displayName isEqualToString:@"摇骰子"]) {
+
+            NSMutableDictionary *urlDict = [mutableContent[@"url"] mutableCopy];
+            if ([urlDict isKindOfClass:[NSMutableDictionary class]]) {
+                NSInteger selectedDicePoint = [[NSUserDefaults standardUserDefaults] integerForKey:@"selectedDicePoint"];
+                if (selectedDicePoint > 0 && selectedDicePoint <= 6) {
+                    NSString *selectedURL = diceImageURLs[selectedDicePoint - 1];
+                    urlDict[@"url_list"] = @[selectedURL];
+                    mutableContent[@"url"] = urlDict;
+                    
+                }
+            }
+        }
+
+        // 替换猜拳图像
+        if ([resourceType intValue] == 5 &&
+            [stickerType intValue] == 12 &&
+            [displayName isEqualToString:@"猜拳"]) {
+
+            NSMutableDictionary *urlDict = [mutableContent[@"url"] mutableCopy];
+            if ([urlDict isKindOfClass:[NSMutableDictionary class]]) {
+                NSInteger selectedRPS = [[NSUserDefaults standardUserDefaults] integerForKey:@"selectedRPS"];
+                if (selectedRPS >= 0 && selectedRPS <= 2) {
+                    NSString *selectedURL = rpsImageURLs[selectedRPS];
+                    urlDict[@"url_list"] = @[selectedURL];
+                    mutableContent[@"url"] = urlDict;
+                    
+                }
+            }
+        }
+    }
+
+    %orig(mutableContent);
+}
+
+%end
+
+//默契回答
+%hook AWEIMExchangeAnswerMessage
+
+- (void)setUnlocked:(BOOL)unlocked {
+
+BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYtacitanswer"];
+
+            if (enabled) {
+           %orig(YES);
+           } else {
+
+          %orig(unlocked);
+
+      }
+}
+
+- (BOOL)unlocked {
+
+BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYtacitanswer"];
+
+          if (enabled) {
+          return YES;
+      }
+   return %orig;
+}
+
+%end
+
+//修改id
+%hook AWEUserHomeAccessibilityViewV2
+
+- (void)layoutSubviews {
+    %orig;
+
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnableDisguise"]) {
+        return;
+    }
+    
+        [self findAndModifyDouyinLabelInView:self];
+        [self modifyNicknameInView:self];
+    
+    
+}
+%new
+- (void)findAndModifyDouyinLabelInView:(UIView *)view {
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:[UILabel class]]) {
+            UILabel *label = (UILabel *)subview;
+            if ([label.text containsString:@"抖音号"]) {
+                NSString *dyid = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDisguiseid"];
+                if (dyid.length > 0) {
+                    label.text = [NSString stringWithFormat:@"抖音号：%@", dyid];                    
+                }
+            }
+        } else {
+
+            [self findAndModifyDouyinLabelInView:subview];
+        }
+    }
+}
+- (void)findAndModify:(UIView *)view {
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:[UILabel class]]) {
+            UILabel *label = (UILabel *)subview;
+            if ([label.text containsString:@"新访客"]) {
+                NSString *dyid = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDisguisefk"];
+                if (dyid.length > 0) {
+                    label.text = [NSString stringWithFormat:@"新访客：%@", dyid];                    
+                }
+            }
+        } else {
+
+            [self findAndModify:subview];
+        }
+    }
+}
+%new
+- (void)modifyNicknameInView:(UIView *)view {
+    for (UIView *subview in view.subviews) {        
+        if ([subview isKindOfClass:NSClassFromString(@"AWEProfileBillboardLabel")]) {
+            UILabel *label = (UILabel *)subview;
+            NSString *newName = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDisguisenc"];
+            if (newName.length > 0) {
+                label.text = newName;                
+            }
+        } else {
+
+            [self modifyNicknameInView:subview];
+        }
+    }
 }
 
 %end
@@ -1159,15 +1417,17 @@ static CGFloat rightLabelRightMargin = -1;
 	}
 }
 %end
+
+//IP属地
 %hook AWEPlayInteractionTimestampElement
 
 - (id)timestampLabel {
 	UILabel *label = %orig;
 	NSString *labelColorHex = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYLabelColor"];
-	if (DYYYGetBool(@"DYYYEnabsuijiyanse")) {
-		labelColorHex = @"random_gradient";
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnabsuijiyanse"]) {
+		labelColorHex = @"random_rainbow";
 	}
-	if (DYYYGetBool(@"DYYYisEnableArea")) {
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYisEnableArea"]) {
 		NSString *originalText = label.text ?: @"";
 		NSString *cityCode = self.model.cityCode;
 
@@ -1247,6 +1507,7 @@ static CGFloat rightLabelRightMargin = -1;
 					  }
 
 					  [DYYYUtils applyColorSettingsToLabel:label colorHexString:labelColorHex];
+					  ;
 					});
 				} else {
 					[CityManager
@@ -1306,13 +1567,14 @@ static CGFloat rightLabelRightMargin = -1;
 								 }
 
 								 [DYYYUtils applyColorSettingsToLabel:label colorHexString:labelColorHex];
+								 ;
 							       });
 						       }
 						     }];
 				}
 			} else if (![originalText containsString:cityName]) {
 				BOOL isDirectCity = [provinceName isEqualToString:cityName] ||
-						    ([cityCode hasPrefix:@"11"] || [cityCode hasPrefix:@"12"] || [cityCode hasPrefix:@"31"] || [cityCode hasPrefix:@"50"]);
+						    ([cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"]);
 				if (!self.model.ipAttribution) {
 					if (isDirectCity) {
 						label.text = [NSString stringWithFormat:@"%@  IP属地：%@", originalText, cityName];
@@ -1336,7 +1598,7 @@ static CGFloat rightLabelRightMargin = -1;
 	if (ipScaleValue.length > 0) {
 		UIFont *originalFont = label.font;
 		CGRect originalFrame = label.frame;
-		CGFloat offset = DYYYGetFloat(@"DYYYIPLabelVerticalOffset");
+		CGFloat offset = [[NSUserDefaults standardUserDefaults] floatForKey:@"DYYYIPLabelVerticalOffset"];
 		if (offset > 0) {
 			CGAffineTransform translationTransform = CGAffineTransformMakeTranslation(0, -offset);
 			label.transform = translationTransform;
@@ -1347,14 +1609,65 @@ static CGFloat rightLabelRightMargin = -1;
 
 		label.font = originalFont;
 	}
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnabsuijiyanse"]) {
+		UIColor *color1 = [UIColor colorWithRed:(CGFloat)arc4random_uniform(256) / 255.0
+						  green:(CGFloat)arc4random_uniform(256) / 255.0
+						   blue:(CGFloat)arc4random_uniform(256) / 255.0
+						  alpha:1.0];
+		UIColor *color2 = [UIColor colorWithRed:(CGFloat)arc4random_uniform(256) / 255.0
+						  green:(CGFloat)arc4random_uniform(256) / 255.0
+						   blue:(CGFloat)arc4random_uniform(256) / 255.0
+						  alpha:1.0];
+		UIColor *color3 = [UIColor colorWithRed:(CGFloat)arc4random_uniform(256) / 255.0
+						  green:(CGFloat)arc4random_uniform(256) / 255.0
+						   blue:(CGFloat)arc4random_uniform(256) / 255.0
+						  alpha:1.0];
 
-	[DYYYUtils applyColorSettingsToLabel:label colorHexString:labelColorHex];
+		NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:label.text];
+		CFIndex length = [attributedText length];
+		for (CFIndex i = 0; i < length; i++) {
+			CGFloat progress = (CGFloat)i / (length == 0 ? 1 : length - 1);
 
+			UIColor *startColor;
+			UIColor *endColor;
+			CGFloat subProgress;
+
+			if (progress < 0.5) {
+				startColor = color1;
+				endColor = color2;
+				subProgress = progress * 2;
+			} else {
+				startColor = color2;
+				endColor = color3;
+				subProgress = (progress - 0.5) * 2;
+			}
+
+			CGFloat startRed, startGreen, startBlue, startAlpha;
+			CGFloat endRed, endGreen, endBlue, endAlpha;
+			[startColor getRed:&startRed green:&startGreen blue:&startBlue alpha:&startAlpha];
+			[endColor getRed:&endRed green:&endGreen blue:&endBlue alpha:&endAlpha];
+
+			CGFloat red = startRed + (endRed - startRed) * subProgress;
+			CGFloat green = startGreen + (endGreen - startGreen) * subProgress;
+			CGFloat blue = startBlue + (endBlue - startBlue) * subProgress;
+			CGFloat alpha = startAlpha + (endAlpha - startAlpha) * subProgress;
+
+			UIColor *currentColor = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+			[attributedText addAttribute:NSForegroundColorAttributeName value:currentColor range:NSMakeRange(i, 1)];
+		}
+
+		label.attributedText = attributedText;
+	} else {
+		NSString *labelColor = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYLabelColor"];
+		if (labelColor.length > 0) {
+			label.textColor = [DYYYUtils colorWithHexString:labelColor];
+		}
+	}
 	return label;
 }
 
 + (BOOL)shouldActiveWithData:(id)arg1 context:(id)arg2 {
-	return DYYYGetBool(@"DYYYisEnableArea");
+	return [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYisEnableArea"];
 }
 
 %end
@@ -4486,8 +4799,8 @@ static AWEIMReusableCommonCell *currentCell;
 %hook AWEPlayInteractionViewController
 
 - (void)onPlayer:(id)arg0 didDoubleClick:(id)arg1 {
-	BOOL isPopupEnabled = DYYYGetBool(@"DYYYEnableDoubleOpenAlertController");
-	BOOL isDirectCommentEnabled = DYYYGetBool(@"DYYYEnableDoubleOpenComment");
+	BOOL isPopupEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnableDoubleOpenAlertController"];
+	BOOL isDirectCommentEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnableDoubleOpenComment"];
 
 	// 直接打开评论区的情况
 	if (isDirectCommentEnabled) {
@@ -4532,7 +4845,7 @@ static AWEIMReusableCommonCell *currentCell;
 		NSMutableArray *actions = [NSMutableArray array];
 
 		// 添加下载选项
-		if (DYYYGetBool(@"DYYYDoubleTapDownload") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapDownload"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapDownload"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapDownload"]) {
 
 			AWEUserSheetAction *downloadAction = [NSClassFromString(@"AWEUserSheetAction")
 			    actionWithTitle:downloadTitle
@@ -4575,7 +4888,7 @@ static AWEIMReusableCommonCell *currentCell;
 										}
 									      }];
 						      } else {
-							      [DYYYUtils showToast:@"没有找到合适格式的图片"];
+					                       [DYYYUtils showToast:@"没有找到合适格式的图片"];
 						      }
 					      }
 				      } else if (isNewLivePhoto) {
@@ -4635,7 +4948,31 @@ static AWEIMReusableCommonCell *currentCell;
 				    }];
 			[actions addObject:downloadAction];
 
-			// 如果是图集，添加下载所有图片选项
+			// 添加保存封面选项
+                        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleSaveCover"]) {
+			if (!isImageContent) { // 仅视频内容显示保存封面选项
+				AWEUserSheetAction *saveCoverAction = [NSClassFromString(@"AWEUserSheetAction")
+				    actionWithTitle:@"保存封面"
+					    imgName:nil
+					    handler:^{
+					      AWEVideoModel *videoModel = awemeModel.video;
+					      if (videoModel && videoModel.coverURL && videoModel.coverURL.originURLList.count > 0) {
+						      NSURL *coverURL = [NSURL URLWithString:videoModel.coverURL.originURLList.firstObject];
+						      [DYYYManager downloadMedia:coverURL
+								       mediaType:MediaTypeImage
+								      completion:^(BOOL success) {
+									if (success) {
+									} else {
+										[DYYYUtils showToast:@"封面保存已取消"];
+									}
+								      }];
+					      }
+					    }];
+				[actions addObject:saveCoverAction];
+			}
+                     }
+
+	                // 如果是图集，添加下载所有图片选项
 			if (isImageContent && awemeModel.albumImages.count > 1) {
 				// 检查是否有实况照片
 				BOOL hasLivePhoto = NO;
@@ -4692,15 +5029,14 @@ static AWEIMReusableCommonCell *currentCell;
 					      }
 
 					      if (livePhotos.count == 0 && imageURLs.count == 0) {
-						      [DYYYUtils showToast:@"没有找到合适格式的图片"];
+						         [DYYYUtils showToast:@"没有找到合适格式的图片"];
 					      }
 					    }];
 				[actions addObject:downloadAllAction];
 			}
 		}
-
 		// 添加下载音频选项
-		if (DYYYGetBool(@"DYYYDoubleTapDownloadAudio") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapDownloadAudio"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapDownloadAudio"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapDownloadAudio"]) {
 
 			AWEUserSheetAction *downloadAudioAction = [NSClassFromString(@"AWEUserSheetAction")
 			    actionWithTitle:@"保存音频"
@@ -4714,31 +5050,11 @@ static AWEIMReusableCommonCell *currentCell;
 			[actions addObject:downloadAudioAction];
 		}
 
-		// 添加接口保存选项
-		if (DYYYGetBool(@"DYYYDoubleInterfaceDownload")) {
-			NSString *apiKey = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYInterfaceDownload"];
-			if (apiKey.length > 0) {
-				AWEUserSheetAction *apiDownloadAction = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"接口保存"
-															  imgName:nil
-															  handler:^{
-															    NSString *shareLink = [awemeModel valueForKey:@"shareURL"];
-															    if (shareLink.length == 0) {
-																    [DYYYUtils showToast:@"无法获取分享链接"];
-																    return;
-															    }
-
-															    // 使用封装的方法进行解析下载
-															    [DYYYManager parseAndDownloadVideoWithShareLink:shareLink apiKey:apiKey];
-															  }];
-				[actions addObject:apiDownloadAction];
-			}
-		}
-
-		// 添加制作视频功能
-		if (DYYYGetBool(@"DYYYDoubleCreateVideo") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleCreateVideo"]) {
+               // 添加制作视频功能	
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleCreateVideo"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleCreateVideo"]) {
 			if (isImageContent) {
 				AWEUserSheetAction *createVideoAction = [NSClassFromString(@"AWEUserSheetAction")
-				    actionWithTitle:@"制作视频"
+				    actionWithTitle:@"合成视频"
 					    imgName:nil
 					    handler:^{
 					      // 收集普通图片URL
@@ -4800,21 +5116,43 @@ static AWEIMReusableCommonCell *currentCell;
 			}
 		}
 
+
+		// 添加接口保存选项
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleInterfaceDownload"]) {
+			NSString *apiKey = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYInterfaceDownload"];
+			if (apiKey.length > 0) {
+				AWEUserSheetAction *apiDownloadAction = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"接口解析"
+															  imgName:nil
+															  handler:^{
+															    NSString *shareLink = [awemeModel valueForKey:@"shareURL"];
+															    if (shareLink.length == 0) {
+																    [DYYYUtils showToast:@"无法获取分享链接"];
+																    return;
+															    }
+
+															    // 使用封装的方法进行解析下载
+															    [DYYYManager parseAndDownloadVideoWithShareLink:shareLink apiKey:apiKey];
+															  }];
+				[actions addObject:apiDownloadAction];
+			}
+		}
+
 		// 添加复制文案选项
-		if (DYYYGetBool(@"DYYYDoubleTapCopyDesc") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapCopyDesc"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapCopyDesc"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapCopyDesc"]) {
 
 			AWEUserSheetAction *copyTextAction = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"复制文案"
 													       imgName:nil
 													       handler:^{
 														 NSString *descText = [awemeModel valueForKey:@"descriptionString"];
 														 [[UIPasteboard generalPasteboard] setString:descText];
-														 [DYYYToast showSuccessToastWithMessage:@"文案已复制"];
+														[DYYYToast showSuccessToastWithMessage:@"文案已复制"];
+
 													       }];
 			[actions addObject:copyTextAction];
 		}
 
 		// 添加打开评论区选项
-		if (DYYYGetBool(@"DYYYDoubleTapComment") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapComment"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapComment"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapComment"]) {
 
 			AWEUserSheetAction *openCommentAction = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"打开评论"
 														  imgName:nil
@@ -4825,34 +5163,34 @@ static AWEIMReusableCommonCell *currentCell;
 		}
 
 		// 添加分享选项
-		if (DYYYGetBool(@"DYYYDoubleTapshowSharePanel") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapshowSharePanel"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapshowSharePanel"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapshowSharePanel"]) {
 
 			AWEUserSheetAction *showSharePanel = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"分享视频"
 													       imgName:nil
 													       handler:^{
-														 [self showSharePanel];
+														 [self showSharePanel]; // 执行分享操作
 													       }];
 			[actions addObject:showSharePanel];
 		}
 
 		// 添加点赞视频选项
-		if (DYYYGetBool(@"DYYYDoubleTapLike") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapLike"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapLike"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapLike"]) {
 
 			AWEUserSheetAction *likeAction = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"点赞视频"
 													   imgName:nil
 													   handler:^{
-													     [self performLikeAction];
+													     [self performLikeAction]; // 执行点赞操作
 													   }];
 			[actions addObject:likeAction];
 		}
 
 		// 添加长按面板
-		if (DYYYGetBool(@"DYYYDoubleTapshowDislikeOnVideo") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapshowDislikeOnVideo"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapshowDislikeOnVideo"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapshowDislikeOnVideo"]) {
 
 			AWEUserSheetAction *showDislikeOnVideo = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"长按面板"
 														   imgName:nil
 														   handler:^{
-														     [self showDislikeOnVideo];
+														     [self showDislikeOnVideo]; // 执行长按面板操作
 														   }];
 			[actions addObject:showDislikeOnVideo];
 		}
@@ -6226,7 +6564,32 @@ static NSString *const kStreamlineSidebarKey = @"DYYYStreamlinethesidebar";
 		}
 	}
 }
-
+%ctor {
+      // 骰子图像 URL 数组
+    diceImageURLs = @[
+        @"https://p26-sign.douyinpic.com/obj/im-resource/1687261843554-ts-e9aab0e5ad90312e706e67?lk3s=91c5b7cb&x-expires=1776769200&x-signature=baB%2FIZcAdhLwmwypQAVayoGDCGw%3D&from=2445653963&s=im_111&se=false&sc=image&biz_tag=aweme_im",
+        @"https://p3-sign.douyinpic.com/obj/im-resource/1687261849121-ts-e9aab0e5ad90322e706e67?lk3s=91c5b7cb&x-expires=1776783600&x-signature=9OjeBKFsrwsSvDbJ7zgYW438GkA%3D&from=2445653963&s=im_111&se=false&sc=image&biz_tag=aweme_im",
+        @"https://p3-sign.douyinpic.com/obj/im-resource/1687261857819-ts-e9aab0e5ad90332e706e67?lk3s=91c5b7cb&x-expires=1776769200&x-signature=kai68kuaaX98V4kt0OlBpEAF1vM%3D&from=2445653963&s=im_111&se=false&sc=image&biz_tag=aweme_im",
+        @"https://p11-sign.douyinpic.com/obj/im-resource/1687261865141-ts-e9aab0e5ad90342e706e67?lk3s=91c5b7cb&x-expires=1776769200&x-signature=LcVn%2Bw22XDlo1feFpbhdBe1pscM%3D&from=2445653963&s=im_111&se=false&sc=image&biz_tag=aweme_im",
+        @"https://p3-sign.douyinpic.com/obj/im-resource/1687261870616-ts-e9aab0e5ad90352e706e67?lk3s=91c5b7cb&x-expires=1776769200&x-signature=hYNyyQw5Rx1JMM%2BZH2GHfRVlQbU%3D&from=2445653963&s=im_111&se=false&sc=image&biz_tag=aweme_im",
+        @"https://p3-sign.douyinpic.com/obj/im-resource/1687261876911-ts-e9aab0e5ad90362e706e67?lk3s=91c5b7cb&x-expires=1776783600&x-signature=e4jdM5oZ9Bssn9mTRdXpa1nZzE4%3D&from=2445653963&s=im_111&se=false&sc=image&biz_tag=aweme_im"
+    ];
+       //猜拳图像 URL 数组
+    rpsImageURLs = @[
+        @"https://p3-sign.douyinpic.com/obj/im-resource/1687263871618-ts-e79fb3e5a4b42e706e67?lk3s=91c5b7cb&x-expires=1776787200&x-signature=S61ZxCxdTJpkHvc8PZSDBqp5dzU%3D&from=2445653963&s=im_111&se=false&sc=image&biz_tag=aweme_im&l=2025042200290891348EC85D4A86315B8E",     // 石头
+        @"https://p3-sign.douyinpic.com/obj/im-resource/1687263865408-ts-e5b8832e706e67?lk3s=91c5b7cb&x-expires=1776787200&x-signature=N4WWMJbmxo9HOkRxN9%2BX3Tst68U%3D&from=2445653963&s=im_111&se=false&sc=image&biz_tag=aweme_im&l=2025042200290891348EC85D4A86315B8E",    // 布
+        @"https://p3-sign.douyinpic.com/obj/im-resource/1687263855295-ts-e589aae588802e706e67?lk3s=91c5b7cb&x-expires=1776787200&x-signature=%2Fk04PfR1HEAODUdzI4wWJdjEhPo%3D&from=2445653963&s=im_111&se=false&sc=image&biz_tag=aweme_im&l=2025042200290891348EC85D4A86315B8E"  // 剪刀
+    ];
+    //原有参数
+	%init(DYYYSettingsGesture);
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYUserAgreementAccepted"]) {
+		%init;
+		BOOL isAutoPlayEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYisEnableAutoPlay"];
+		if (isAutoPlayEnabled) {
+			%init(AutoPlay);
+		}
+	}
+}
 // 隐藏键盘 AI
 static __weak UIView *cachedHideView = nil;
 static void hideParentViewsSubviews(UIView *view) {
@@ -6262,6 +6625,9 @@ static void findTargetViewInView(UIView *view) {
 }
 
 %ctor {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYForceDownloadEmotion"]) {
+			%init(EnableStickerSaveMenu);
+    }
 	// 注册键盘通知
 	if (DYYYGetBool(@"DYYYUserAgreementAccepted")) {
 		[[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification
