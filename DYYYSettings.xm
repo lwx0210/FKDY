@@ -193,14 +193,13 @@ extern "C"
 		    @"subTitle" : @"填入 random 使用随机颜色弹幕",
 		    @"detail" : @"16进制,只填后6位即可,不填默认",
 		    @"cellType" : @20,
-		    @"imageName" : @"ic_dansquarenut_outlined_20"}
+		    @"imageName" : @"ic_dansquarenut_outlined_20"},
 		  @{@"identifier" : @"DYYYDanmuRainbowRotating",
 		    @"title" : @"旋转彩虹弹幕",
 		    @"subTitle" : @"启用后将覆盖上面的自定义弹幕颜色",
 		    @"detail" : @"",
 		    @"cellType" : @37,
-		    @"imageName" : @"ic_dansquarenut_outlined_20"
-		  }
+		    @"imageName" : @"ic_dansquarenut_outlined_20"}
 	  ];
 
 	  for (NSDictionary *dict in appearanceSettings) {
