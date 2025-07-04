@@ -1293,3 +1293,48 @@ static CGFloat gStartVal = 0.0;
 
 @interface MTKView : UIView
 @end
+
+//修改id附加起始位 
+@interface AWEUserHomeAccessibilityViewV2 : UIView
+- (void)findAndModifyDouyinLabelInView:(UIView *)view;
+- (void)findAndModify:(UIView *)view;
+- (void)modifyNicknameInView:(UIView *)view;
+@end
+
+//数据伪造
+@interface AWEProfileSocialStatisticView : UIView
+- (void)setFansCount:(NSNumber *)count;
+- (void)setPraiseCount:(NSNumber *)count;
+- (void)setFollowingCount:(NSNumber *)count;
+- (void)setFriendCount:(NSNumber *)count;
+- (void)p_updateSocialStatisticContent:(BOOL)animated;
+@end
+
+@interface AWEProfileHeaderMyProfileViewController : UIViewController
+- (void)reloadSettings;
+@end
+
+//AI搜索
+@interface AWESearchKeyboardVoiceSearchEntranceView : UIView
+@end
+
+//左右进度条
+@interface AWEPlayInteractionProgressContainerView : UIView
+- (void)dyyy_applyShrinkIfNeeded;
+@end
+
+
+@interface AWEPlayInteractionProgressContainerView : UIView
+@end
+
+
+@interface AWEFeedProgressSlider : UIView
+@property(nonatomic, assign) float maximumValue;
+@property(nonatomic, strong) UIView *leftLabelUI;
+@property(nonatomic, strong) UIView *rightLabelUI;
+@property(nonatomic) AWEPlayInteractionProgressController *progressSliderDelegate;
+
+- (void)applyCustomProgressStyle;
+- (void)applyWidthPercentToSubviews:(CGFloat)widthPercent;
+@end
+
