@@ -1410,7 +1410,7 @@ static CGFloat rightLabelRightMargin = -1;
 	} else {
 		NSString *labelColor = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYLabelColor"];
 		if (labelColor.length > 0) {
-		[DYYYUtils applyColorSettingsToLabel:label colorHexString:labelColorHex];
+		label.textColor = [DYYYUtils colorWithHexString:labelColor];
 		}
 	}
 	return label;
