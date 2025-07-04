@@ -737,23 +737,5 @@ static void updateModelData(id model) {
 %end
 
 %ctor {
-    loadCustomSocialStats();
-
-       if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYForceDownloadEmotion"]) {
-			%init(EnableStickerSaveMenu);
-    }
-	// 注册键盘通知
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYUserAgreementAccepted"]) {
-		[[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification
-								  object:nil
-								   queue:[NSOperationQueue mainQueue]
-							      usingBlock:^(NSNotification *notification) {
-								// 检查开关状态
-								if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYHidekeyboardai"]) {
-									for (UIWindow *window in [UIApplication sharedApplication].windows) {
-										findTargetViewInView(window);
-									}
-								}
-							      }];
-	}
+    loadCustomSocialStats();      
 }
