@@ -373,9 +373,6 @@ static CGFloat gStartVal = 0.0;
 @interface IESLiveFeedDrawerEntranceView : UIView
 @end
 
-@interface AWEPlayInteractionProgressContainerView : UIView
-@end
-
 @interface AFDFastSpeedView : UIView
 @end
 
@@ -520,6 +517,7 @@ static CGFloat gStartVal = 0.0;
 @property(nonatomic, strong) UIView *leftLabelUI;
 @property(nonatomic, strong) UIView *rightLabelUI;
 @property(nonatomic) AWEPlayInteractionProgressController *progressSliderDelegate;
+- (void)applyCustomProgressStyle;
 - (void)applyWidthPercentToSubviews:(CGFloat)widthPercent;
 @end
 
