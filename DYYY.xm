@@ -6545,25 +6545,6 @@ static NSString *const kStreamlineSidebarKey = @"DYYYStreamlinethesidebar";
 	if (videoContentClass) {
 		%init(BDMultiContentVideoViewGroup, BDMultiContentContainer_VideoContentView = videoContentClass);
 
-	// 动态获取 Swift 类并初始化对应的组
-	Class commentHeaderGeneralClass = objc_getClass("AWECommentPanelHeaderSwiftImpl.CommentHeaderGeneralView");
-	if (commentHeaderGeneralClass) {
-		%init(CommentHeaderGeneralGroup, AWECommentPanelHeaderSwiftImpl_CommentHeaderGeneralView = commentHeaderGeneralClass);
-	}
-
-	Class commentHeaderGoodsClass = objc_getClass("AWECommentPanelHeaderSwiftImpl.CommentHeaderGoodsView");
-	if (commentHeaderGoodsClass) {
-		%init(CommentHeaderGoodsGroup, AWECommentPanelHeaderSwiftImpl_CommentHeaderGoodsView = commentHeaderGoodsClass);
-	}
-
-	Class commentHeaderTemplateClass = objc_getClass("AWECommentPanelHeaderSwiftImpl.CommentHeaderTemplateAnchorView");
-	if (commentHeaderTemplateClass) {
-		%init(CommentHeaderTemplateGroup, AWECommentPanelHeaderSwiftImpl_CommentHeaderTemplateAnchorView = commentHeaderTemplateClass);
-	}
-       Class tipsVCClass = objc_getClass("AWECommentPanelListSwiftImpl.CommentBottomTipsContainerViewController");
-        if (tipsVCClass) {
-        %init(CommentBottomTipsVCGroup,AWECommentPanelListSwiftImpl_CommentBottomTipsContainerViewController = tipsVCClass);
-    }
   }
 }
 %ctor {
@@ -6600,7 +6581,7 @@ static NSString *const kStreamlineSidebarKey = @"DYYYStreamlinethesidebar";
         @"https://p3-sign.douyinpic.com/obj/im-resource/1687263855295-ts-e589aae588802e706e67?lk3s=91c5b7cb&x-expires=1776787200&x-signature=%2Fk04PfR1HEAODUdzI4wWJdjEhPo%3D&from=2445653963&s=im_111&se=false&sc=image&biz_tag=aweme_im&l=2025042200290891348EC85D4A86315B8E"  // 剪刀
     ];
     //原有参数
-	%init(DYYYSettingsGesture);
+
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYUserAgreementAccepted"]) {
 		%init;
 		BOOL isAutoPlayEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYisEnableAutoPlay"];
