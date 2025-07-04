@@ -6544,9 +6544,28 @@ static NSString *const kStreamlineSidebarKey = @"DYYYStreamlinethesidebar";
 	Class videoContentClass = objc_getClass("BDMultiContentContainer.VideoContentView");
 	if (videoContentClass) {
 		%init(BDMultiContentVideoViewGroup, BDMultiContentContainer_VideoContentView = videoContentClass);
-	}
-}
 
+	// 动态获取 Swift 类并初始化对应的组
+	Class commentHeaderGeneralClass = objc_getClass("AWECommentPanelHeaderSwiftImpl.CommentHeaderGeneralView");
+	if (commentHeaderGeneralClass) {
+		%init(CommentHeaderGeneralGroup, AWECommentPanelHeaderSwiftImpl_CommentHeaderGeneralView = commentHeaderGeneralClass);
+	}
+
+	Class commentHeaderGoodsClass = objc_getClass("AWECommentPanelHeaderSwiftImpl.CommentHeaderGoodsView");
+	if (commentHeaderGoodsClass) {
+		%init(CommentHeaderGoodsGroup, AWECommentPanelHeaderSwiftImpl_CommentHeaderGoodsView = commentHeaderGoodsClass);
+	}
+
+	Class commentHeaderTemplateClass = objc_getClass("AWECommentPanelHeaderSwiftImpl.CommentHeaderTemplateAnchorView");
+	if (commentHeaderTemplateClass) {
+		%init(CommentHeaderTemplateGroup, AWECommentPanelHeaderSwiftImpl_CommentHeaderTemplateAnchorView = commentHeaderTemplateClass);
+	}
+       Class tipsVCClass = objc_getClass("AWECommentPanelListSwiftImpl.CommentBottomTipsContainerViewController");
+        if (tipsVCClass) {
+        %init(CommentBottomTipsVCGroup,AWECommentPanelListSwiftImpl_CommentBottomTipsContainerViewController = tipsVCClass);
+    }
+  }
+}
 %ctor {
 	%init(DYYYSettingsGesture);
 	if (DYYYGetBool(@"DYYYUserAgreementAccepted")) {
