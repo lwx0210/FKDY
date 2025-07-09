@@ -128,7 +128,6 @@ static CGFloat gStartVal = 0.0;
 @property(nonatomic, assign) BOOL isLivePhoto;
 @property(nonatomic, strong) NSString *shareURL;
 @property(nonatomic, strong) id hotSpotLynxCardModel;
-@property(nonatomic, copy) NSString *liveReason;
 @property(nonatomic, strong) AWELiveFollowFeedCellModel *cellRoom;
 @property(nonatomic, strong) id shareRecExtra; // 推荐视频专有属性
 @property(nonatomic, strong) NSArray<AWEAwemeTextExtraModel *> *textExtras;
@@ -208,30 +207,30 @@ static CGFloat gStartVal = 0.0;
 @end
 
 @interface AWEDanmakuContentLabel : UILabel
-@property (nonatomic, assign) long long type;
-@property (nonatomic, copy) NSString *danmakuText;
-@property (nonatomic, copy) NSArray *danmakuStyleList;
-@property (nonatomic, strong) UIColor *strokeColor;
-@property (nonatomic, assign) double strokeWidth;
-- (id)colorFromHexString:(id)arg0 baseColor:(id)arg1 ;
-- (void)setTextColor:(id)arg0 ;
-- (id)initWithFrame:(id)arg0 textColor:(id)arg1 type:(long long)arg2 ;
+@property(nonatomic, assign) long long type;
+@property(nonatomic, copy) NSString *danmakuText;
+@property(nonatomic, copy) NSArray *danmakuStyleList;
+@property(nonatomic, strong) UIColor *strokeColor;
+@property(nonatomic, assign) double strokeWidth;
+- (id)colorFromHexString:(id)arg0 baseColor:(id)arg1;
+- (void)setTextColor:(id)arg0;
+- (id)initWithFrame:(id)arg0 textColor:(id)arg1 type:(long long)arg2;
 - (id)danmakuText;
-- (void)setDanmakuText:(id)arg0 ;
+- (void)setDanmakuText:(id)arg0;
 - (id)danmakuStyleList;
-- (void)drawUnderLineWithStart:(long long)arg0 len:(long long)arg1 ;
-- (void)setDanmakuStyleList:(id)arg0 ;
+- (void)drawUnderLineWithStart:(long long)arg0 len:(long long)arg1;
+- (void)setDanmakuStyleList:(id)arg0;
 - (double)strokeWidth;
 - (id)accessibilityLabel;
-- (void)setStrokeWidth:(double)arg0 ;
-- (void)setAccessibilityLabel:(id)arg0 ;
-- (void)setStrokeColor:(id)arg0 ;
+- (void)setStrokeWidth:(double)arg0;
+- (void)setAccessibilityLabel:(id)arg0;
+- (void)setStrokeColor:(id)arg0;
 - (id)strokeColor;
 - (long long)type;
-- (id)initWithFrame:(id)arg0 ;
-- (id)boundingRectForCharacterRange:(id)arg0 ;
-- (void)drawTextInRect:(id)arg0 ;
-- (void)setType:(long long)arg0 ;
+- (id)initWithFrame:(id)arg0;
+- (id)boundingRectForCharacterRange:(id)arg0;
+- (void)drawTextInRect:(id)arg0;
+- (void)setType:(long long)arg0;
 @end
 
 @interface XIGDanmakuPlayerView : UIView
@@ -240,24 +239,24 @@ static CGFloat gStartVal = 0.0;
 @end
 
 @interface AWEDanmakuItemTextInfo : NSObject
-@property (nonatomic, strong) NSAttributedString *danmakuText;
-@property (nonatomic, assign) id danmakuTextFrame;
-@property (nonatomic, assign) double strokeWidth;
-@property (nonatomic, strong) UIColor *strokeColor;
-@property (nonatomic, strong) UIFont *danmakuFont;
-@property (nonatomic, strong) UIColor *danmakuTextColor;
-- (id)colorFromHexStringForTextInfo:(id)arg0 ;
-- (void)setDanmakuFont:(id)arg0 ;
+@property(nonatomic, strong) NSAttributedString *danmakuText;
+@property(nonatomic, assign) id danmakuTextFrame;
+@property(nonatomic, assign) double strokeWidth;
+@property(nonatomic, strong) UIColor *strokeColor;
+@property(nonatomic, strong) UIFont *danmakuFont;
+@property(nonatomic, strong) UIColor *danmakuTextColor;
+- (id)colorFromHexStringForTextInfo:(id)arg0;
+- (void)setDanmakuFont:(id)arg0;
 - (id)danmakuFont;
 - (id)danmakuText;
-- (void)setDanmakuText:(id)arg0 ;
+- (void)setDanmakuText:(id)arg0;
 - (id)danmakuTextFrame;
-- (void)setDanmakuTextFrame:(id)arg0 ;
+- (void)setDanmakuTextFrame:(id)arg0;
 - (id)danmakuTextColor;
-- (void)setDanmakuTextColor:(id)arg0 ;
+- (void)setDanmakuTextColor:(id)arg0;
 - (double)strokeWidth;
-- (void)setStrokeWidth:(double)arg0 ;
-- (void)setStrokeColor:(id)arg0 ;
+- (void)setStrokeWidth:(double)arg0;
+- (void)setStrokeColor:(id)arg0;
 - (id)strokeColor;
 @end
 
@@ -370,6 +369,9 @@ static CGFloat gStartVal = 0.0;
 @interface AWEAwemeDetailTableView : UITableView
 @end
 
+@interface AWECommentContainerViewController : UIViewController
+@end
+
 @interface AWECommentInputViewController : UIViewController
 @end
 
@@ -380,7 +382,6 @@ static CGFloat gStartVal = 0.0;
 @end
 
 @interface AWEPlayInteractionProgressContainerView : UIView
-- (void)dyyy_applyShrinkIfNeeded;
 @end
 
 @interface AFDFastSpeedView : UIView
@@ -527,8 +528,6 @@ static CGFloat gStartVal = 0.0;
 @property(nonatomic, strong) UIView *leftLabelUI;
 @property(nonatomic, strong) UIView *rightLabelUI;
 @property(nonatomic) AWEPlayInteractionProgressController *progressSliderDelegate;
-
-- (void)applyCustomProgressStyle;
 - (void)applyWidthPercentToSubviews:(CGFloat)widthPercent;
 @end
 
@@ -848,7 +847,6 @@ static CGFloat gStartVal = 0.0;
 @end
 
 @interface AWEFakeProgressSliderView : UIView
-- (void)applyCustomProgressStyle;
 @end
 
 @protocol IESIMContentSheetVCProtocol
@@ -1074,11 +1072,11 @@ static CGFloat gStartVal = 0.0;
 @end
 @interface IESLiveDynamicRankListEntranceView : UIView
 @end
-@interface IESLiveDanmakuVariousView : UIView
-@end
 @interface IESLiveShortTouchActionView : UIView
 @end
 @interface PlatformCanvasView : UIView
+@end
+@interface IESLiveDanmakuVariousView : UIView
 @end
 @interface IESLiveLotteryAnimationViewNew : UIView
 @end
@@ -1238,12 +1236,6 @@ static CGFloat gStartVal = 0.0;
 - (void)adjustContainerViewLayout:(UICollectionViewCell *)cell;
 @end
 
-@interface UIView (Helper)
-- (BOOL)containsClassNamed:(NSString *)className;
-- (UIView *)findViewWithClassName:(NSString *)className;
-- (NSArray<UIView *> *)findAllViewsWithClassName:(NSString *)className;
-@end
-
 @interface AWESettingsTableViewController : AWESettingBaseViewController
 - (id)viewModel;
 - (void)removeAboutSection;
@@ -1314,28 +1306,4 @@ static CGFloat gStartVal = 0.0;
 @end
 
 @interface MTKView : UIView
-@end
-
-//修改id附加起始位 
-@interface AWEUserHomeAccessibilityViewV2 : UIView
-- (void)findAndModifyDouyinLabelInView:(UIView *)view;
-- (void)findAndModify:(UIView *)view;
-- (void)modifyNicknameInView:(UIView *)view;
-@end
-
-//数据伪造
-@interface AWEProfileSocialStatisticView : UIView
-- (void)setFansCount:(NSNumber *)count;
-- (void)setPraiseCount:(NSNumber *)count;
-- (void)setFollowingCount:(NSNumber *)count;
-- (void)setFriendCount:(NSNumber *)count;
-- (void)p_updateSocialStatisticContent:(BOOL)animated;
-@end
-
-@interface AWEProfileHeaderMyProfileViewController : UIViewController
-- (void)reloadSettings;
-@end
-
-//AI搜索
-@interface AWESearchKeyboardVoiceSearchEntranceView : UIView
 @end
