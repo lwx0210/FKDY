@@ -736,9 +736,51 @@ static void updateModelData(id model) {
 }
 %end
 
-%ctor {
-    loadCustomSocialStats();      
+// Swift 类组 - 这些会在 %ctor 中动态初始化
+%group CommentHeaderGeneralGroup
+%hook AWECommentPanelHeaderSwiftImpl_CommentHeaderGeneralView
+- (void)layoutSubviews {
+	%orig;
+
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYHideCommentViews"]) {
+		[self setHidden:YES];
+	}
 }
+%end
+%end
+%group CommentHeaderGoodsGroup
+%hook AWECommentPanelHeaderSwiftImpl_CommentHeaderGoodsView
+- (void)layoutSubviews {
+	%orig;
+
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYHideCommentViews"]) {
+		[self setHidden:YES];
+	}
+}
+%end
+%end
+%group CommentHeaderTemplateGroup
+%hook AWECommentPanelHeaderSwiftImpl_CommentHeaderTemplateAnchorView
+- (void)layoutSubviews {
+	%orig;
+
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYHideCommentViews"]) {
+		[self setHidden:YES];
+	}
+}
+%end
+%end
+%group CommentBottomTipsVCGroup
+%hook AWECommentPanelListSwiftImpl_CommentBottomTipsContainerViewController
+- (void)viewWillAppear:(BOOL)animated {
+    %orig(animated);
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYHideCommentTips"]) {
+        ((UIViewController *)self).view.hidden = YES;
+    }
+}
+%end
+%end
+// Swift 类初始化
 %ctor {
       // 骰子图像 URL 数组
     diceImageURLs = @[
@@ -765,22 +807,8 @@ static void updateModelData(id model) {
 		}
 	}
 }
+
 %ctor {
-       if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYForceDownloadEmotion"]) {
-			%init(EnableStickerSaveMenu);
-    }
-	// 注册键盘通知
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYUserAgreementAccepted"]) {
-		[[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification
-								  object:nil
-								   queue:[NSOperationQueue mainQueue]
-							      usingBlock:^(NSNotification *notification) {
-								// 检查开关状态
-								if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYHidekeyboardai"]) {
-									for (UIWindow *window in [UIApplication sharedApplication].windows) {
-										findTargetViewInView(window);
-									}
-								}
-							      }];
-	}
+    loadCustomSocialStats();      
 }
+
