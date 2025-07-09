@@ -797,17 +797,9 @@ static void updateModelData(id model) {
         @"https://p3-sign.douyinpic.com/obj/im-resource/1687263865408-ts-e5b8832e706e67?lk3s=91c5b7cb&x-expires=1776787200&x-signature=N4WWMJbmxo9HOkRxN9%2BX3Tst68U%3D&from=2445653963&s=im_111&se=false&sc=image&biz_tag=aweme_im&l=2025042200290891348EC85D4A86315B8E",    // 布
         @"https://p3-sign.douyinpic.com/obj/im-resource/1687263855295-ts-e589aae588802e706e67?lk3s=91c5b7cb&x-expires=1776787200&x-signature=%2Fk04PfR1HEAODUdzI4wWJdjEhPo%3D&from=2445653963&s=im_111&se=false&sc=image&biz_tag=aweme_im&l=2025042200290891348EC85D4A86315B8E"  // 剪刀
     ];
-    //原有参数
-	%init(DYYYSettingsGesture);
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYUserAgreementAccepted"]) {
-		%init;
-		BOOL isAutoPlayEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYisEnableAutoPlay"];
-		if (isAutoPlayEnabled) {
-			%init(AutoPlay);
-		}
-	}
-}
 
+		}
+	
 %ctor {
     loadCustomSocialStats();      
 }
