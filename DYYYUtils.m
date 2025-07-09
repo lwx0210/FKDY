@@ -265,45 +265,6 @@
     return totalSize;
 }
 
-+ (void)removeAllContentsAtPath:(NSString *)directoryPath {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    BOOL isDir = NO;
-    
-    if (![fileManager fileExistsAtPath:directoryPath isDirectory:&isDir] || !isDir) {
-        NSLog(@"[CacheClean] Path is not a directory or does not exist: %@", directoryPath);
-        return;
-    }
-    
-    NSURL *directoryURL = [NSURL fileURLWithPath:directoryPath];
-    
-    NSDirectoryEnumerator *enumerator = [fileManager enumeratorAtURL:directoryURL
-                                          includingPropertiesForKeys:@[NSURLIsDirectoryKey, NSURLIsSymbolicLinkKey]
-                                                             options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                        errorHandler:^BOOL(NSURL *url, NSError *enumError) {
-        NSLog(@"[CacheClean] Error enumerating directory %@: %@", url, enumError);
-        return YES;
-    }];
-    
-    NSMutableArray<NSURL *> *itemsToDelete = [NSMutableArray array];
-    for (NSURL *itemURL in enumerator) {
-        NSNumber *isSymbolicLink;
-        [itemURL getResourceValue:&isSymbolicLink forKey:NSURLIsSymbolicLinkKey error:nil];
-        if ([isSymbolicLink boolValue]) {
-            continue;
-        }
-        [itemsToDelete addObject:itemURL];
-    }
-    
-    for (NSURL *itemURL in [itemsToDelete reverseObjectEnumerator]) {
-        NSError *removeError = nil;
-        if ([fileManager removeItemAtURL:itemURL error:&removeError]) {
-            // NSLog(@"[CacheClean] Successfully removed: %@", itemURL.lastPathComponent);
-        } else {
-            NSLog(@"[CacheClean] Error removing %@: %@", itemURL.path, removeError);
-        }
-    }
-}
-
 #pragma mark - Public Color Scheme Methods (公共颜色方案方法)
 
 static NSCache *_gradientColorCache;
