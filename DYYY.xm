@@ -1177,15 +1177,17 @@ static CGFloat rightLabelRightMargin = -1;
 	}
 }
 %end
+
+//IP属地
 %hook AWEPlayInteractionTimestampElement
 
 - (id)timestampLabel {
 	UILabel *label = %orig;
 	NSString *labelColorHex = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYLabelColor"];
-	if (DYYYGetBool(@"DYYYEnabsuijiyanse")) {
-		labelColorHex = @"random_gradient";
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnabsuijiyanse"]) {
+		labelColorHex = @"random_rainbow";
 	}
-	if (DYYYGetBool(@"DYYYisEnableArea")) {
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYisEnableArea"]) {
 		NSString *originalText = label.text ?: @"";
 		NSString *cityCode = self.model.cityCode;
 
@@ -1265,6 +1267,7 @@ static CGFloat rightLabelRightMargin = -1;
 					  }
 
 					  [DYYYUtils applyColorSettingsToLabel:label colorHexString:labelColorHex];
+					  ;
 					});
 				} else {
 					[CityManager
@@ -1324,13 +1327,14 @@ static CGFloat rightLabelRightMargin = -1;
 								 }
 
 								 [DYYYUtils applyColorSettingsToLabel:label colorHexString:labelColorHex];
+								 ;
 							       });
 						       }
 						     }];
 				}
 			} else if (![originalText containsString:cityName]) {
 				BOOL isDirectCity = [provinceName isEqualToString:cityName] ||
-						    ([cityCode hasPrefix:@"11"] || [cityCode hasPrefix:@"12"] || [cityCode hasPrefix:@"31"] || [cityCode hasPrefix:@"50"]);
+						    ([cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"]);
 				if (!self.model.ipAttribution) {
 					if (isDirectCity) {
 						label.text = [NSString stringWithFormat:@"%@  IP属地：%@", originalText, cityName];
@@ -1354,7 +1358,7 @@ static CGFloat rightLabelRightMargin = -1;
 	if (ipScaleValue.length > 0) {
 		UIFont *originalFont = label.font;
 		CGRect originalFrame = label.frame;
-		CGFloat offset = DYYYGetFloat(@"DYYYIPLabelVerticalOffset");
+		CGFloat offset = [[NSUserDefaults standardUserDefaults] floatForKey:@"DYYYIPLabelVerticalOffset"];
 		if (offset > 0) {
 			CGAffineTransform translationTransform = CGAffineTransformMakeTranslation(0, -offset);
 			label.transform = translationTransform;
@@ -1365,14 +1369,65 @@ static CGFloat rightLabelRightMargin = -1;
 
 		label.font = originalFont;
 	}
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnabsuijiyanse"]) {
+		UIColor *color1 = [UIColor colorWithRed:(CGFloat)arc4random_uniform(256) / 255.0
+						  green:(CGFloat)arc4random_uniform(256) / 255.0
+						   blue:(CGFloat)arc4random_uniform(256) / 255.0
+						  alpha:1.0];
+		UIColor *color2 = [UIColor colorWithRed:(CGFloat)arc4random_uniform(256) / 255.0
+						  green:(CGFloat)arc4random_uniform(256) / 255.0
+						   blue:(CGFloat)arc4random_uniform(256) / 255.0
+						  alpha:1.0];
+		UIColor *color3 = [UIColor colorWithRed:(CGFloat)arc4random_uniform(256) / 255.0
+						  green:(CGFloat)arc4random_uniform(256) / 255.0
+						   blue:(CGFloat)arc4random_uniform(256) / 255.0
+						  alpha:1.0];
 
-	[DYYYUtils applyColorSettingsToLabel:label colorHexString:labelColorHex];
+		NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:label.text];
+		CFIndex length = [attributedText length];
+		for (CFIndex i = 0; i < length; i++) {
+			CGFloat progress = (CGFloat)i / (length == 0 ? 1 : length - 1);
 
+			UIColor *startColor;
+			UIColor *endColor;
+			CGFloat subProgress;
+
+			if (progress < 0.5) {
+				startColor = color1;
+				endColor = color2;
+				subProgress = progress * 2;
+			} else {
+				startColor = color2;
+				endColor = color3;
+				subProgress = (progress - 0.5) * 2;
+			}
+
+			CGFloat startRed, startGreen, startBlue, startAlpha;
+			CGFloat endRed, endGreen, endBlue, endAlpha;
+			[startColor getRed:&startRed green:&startGreen blue:&startBlue alpha:&startAlpha];
+			[endColor getRed:&endRed green:&endGreen blue:&endBlue alpha:&endAlpha];
+
+			CGFloat red = startRed + (endRed - startRed) * subProgress;
+			CGFloat green = startGreen + (endGreen - startGreen) * subProgress;
+			CGFloat blue = startBlue + (endBlue - startBlue) * subProgress;
+			CGFloat alpha = startAlpha + (endAlpha - startAlpha) * subProgress;
+
+			UIColor *currentColor = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+			[attributedText addAttribute:NSForegroundColorAttributeName value:currentColor range:NSMakeRange(i, 1)];
+		}
+
+		label.attributedText = attributedText;
+	} else {
+		NSString *labelColor = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYLabelColor"];
+		if (labelColor.length > 0) {
+			[DYYYUtils applyColorSettingsToLabel:label colorHexString:labelColorHex];
+		}
+	}
 	return label;
 }
 
 + (BOOL)shouldActiveWithData:(id)arg1 context:(id)arg2 {
-	return DYYYGetBool(@"DYYYisEnableArea");
+	return [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYisEnableArea"];
 }
 
 %end
@@ -4540,11 +4595,12 @@ static AWEIMReusableCommonCell *currentCell;
 }
 %end
 
+//双击菜单
 %hook AWEPlayInteractionViewController
 
 - (void)onPlayer:(id)arg0 didDoubleClick:(id)arg1 {
-	BOOL isPopupEnabled = DYYYGetBool(@"DYYYEnableDoubleOpenAlertController");
-	BOOL isDirectCommentEnabled = DYYYGetBool(@"DYYYEnableDoubleOpenComment");
+	BOOL isPopupEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnableDoubleOpenAlertController"];
+	BOOL isDirectCommentEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnableDoubleOpenComment"];
 
 	// 直接打开评论区的情况
 	if (isDirectCommentEnabled) {
@@ -4558,11 +4614,11 @@ static AWEIMReusableCommonCell *currentCell;
 		awemeModel = [self performSelector:@selector(awemeModel)];
 
 		AWEVideoModel *videoModel = awemeModel.video;
-		AWEMusicModel *musicModel = awemeModel.music;
-		NSURL *audioURL = nil;
-		if (musicModel && musicModel.playURL && musicModel.playURL.originURLList.count > 0) {
-			audioURL = [NSURL URLWithString:musicModel.playURL.originURLList.firstObject];
-		}
+                AWEMusicModel *musicModel = awemeModel.music;
+                NSURL *audioURL = nil;
+                if (musicModel && musicModel.playURL && musicModel.playURL.originURLList.count > 0) {
+                        audioURL = [NSURL URLWithString:musicModel.playURL.originURLList.firstObject];
+                }
 
 		// 确定内容类型（视频或图片）
 		BOOL isImageContent = (awemeModel.awemeType == 68);
@@ -4593,7 +4649,7 @@ static AWEIMReusableCommonCell *currentCell;
 		NSMutableArray *actions = [NSMutableArray array];
 
 		// 添加下载选项
-		if (DYYYGetBool(@"DYYYDoubleTapDownload") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapDownload"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapDownload"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapDownload"]) {
 
 			AWEUserSheetAction *downloadAction = [NSClassFromString(@"AWEUserSheetAction")
 			    actionWithTitle:downloadTitle
@@ -4627,17 +4683,17 @@ static AWEIMReusableCommonCell *currentCell;
 									  }];
 					      } else if (currentImageModel && currentImageModel.urlList.count > 0) {
 						      if (downloadURL) {
-							      [DYYYManager downloadMedia:downloadURL
-									       mediaType:MediaTypeImage
-										   audio:nil
-									      completion:^(BOOL success) {
+							          [DYYYManager downloadMedia:downloadURL
+                                                                               mediaType:MediaTypeImage
+                                                                                   audio:nil
+                                                                              completion:^(BOOL success) {
 										if (success) {
 										} else {
 											[DYYYUtils showToast:@"图片保存已取消"];
 										}
 									      }];
 						      } else {
-							      [DYYYUtils showToast:@"没有找到合适格式的图片"];
+					                       [DYYYUtils showToast:@"没有找到合适格式的图片"];
 						      }
 					      }
 				      } else if (isNewLivePhoto) {
@@ -4678,19 +4734,19 @@ static AWEIMReusableCommonCell *currentCell;
 
 						      if (urlList && urlList.count > 0) {
 							      NSURL *url = [NSURL URLWithString:urlList.firstObject];
-							      [DYYYManager downloadMedia:url
-									       mediaType:MediaTypeVideo
-										   audio:audioURL
-									      completion:^(BOOL success){
-									      }];
+							                           [DYYYManager downloadMedia:url
+                                                                               mediaType:MediaTypeVideo
+                                                                                   audio:audioURL
+                                                                              completion:^(BOOL success){
+                                                                              }];
 						      } else {
 							      // 备用方法：直接使用h264URL
 							      if (videoModel.h264URL && videoModel.h264URL.originURLList.count > 0) {
 								      NSURL *url = [NSURL URLWithString:videoModel.h264URL.originURLList.firstObject];
-								      [DYYYManager downloadMedia:url
-										       mediaType:MediaTypeVideo
-											   audio:audioURL
-										      completion:^(BOOL success){
+								 		   [DYYYManager downloadMedia:url
+									            mediaType:MediaTypeVideo
+                                                                                    audio:audioURL
+                                                                                    completion:^(BOOL success){
 										      }];
 							      }
 						      }
@@ -4699,7 +4755,32 @@ static AWEIMReusableCommonCell *currentCell;
 				    }];
 			[actions addObject:downloadAction];
 
-			// 如果是图集，添加下载所有图片选项
+			// 添加保存封面选项
+                        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleSaveCover"]) {
+			if (!isImageContent) { // 仅视频内容显示保存封面选项
+				AWEUserSheetAction *saveCoverAction = [NSClassFromString(@"AWEUserSheetAction")
+				    actionWithTitle:@"保存封面"
+					    imgName:nil
+					    handler:^{
+					      AWEVideoModel *videoModel = awemeModel.video;
+					      if (videoModel && videoModel.coverURL && videoModel.coverURL.originURLList.count > 0) {
+						      NSURL *coverURL = [NSURL URLWithString:videoModel.coverURL.originURLList.firstObject];
+						    [DYYYManager downloadMedia:coverURL
+                                                     mediaType:MediaTypeImage
+                                                     audio:nil
+                                                     completion:^(BOOL success) {
+					              if (success) {
+					               } else {
+						      [DYYYUtils showToast:@"封面保存已取消"];
+					    }
+					  }];
+					      }
+					    }];
+				[actions addObject:saveCoverAction];
+			}
+                     }
+
+	                // 如果是图集，添加下载所有图片选项
 			if (isImageContent && awemeModel.albumImages.count > 1) {
 				// 检查是否有实况照片
 				BOOL hasLivePhoto = NO;
@@ -4756,15 +4837,14 @@ static AWEIMReusableCommonCell *currentCell;
 					      }
 
 					      if (livePhotos.count == 0 && imageURLs.count == 0) {
-						      [DYYYUtils showToast:@"没有找到合适格式的图片"];
+						         [DYYYUtils showToast:@"没有找到合适格式的图片"];
 					      }
 					    }];
 				[actions addObject:downloadAllAction];
 			}
 		}
-
 		// 添加下载音频选项
-		if (DYYYGetBool(@"DYYYDoubleTapDownloadAudio") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapDownloadAudio"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapDownloadAudio"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapDownloadAudio"]) {
 
 			AWEUserSheetAction *downloadAudioAction = [NSClassFromString(@"AWEUserSheetAction")
 			    actionWithTitle:@"保存音频"
@@ -4772,37 +4852,17 @@ static AWEIMReusableCommonCell *currentCell;
 				    handler:^{
 				      if (musicModel && musicModel.playURL && musicModel.playURL.originURLList.count > 0) {
 					      NSURL *url = [NSURL URLWithString:musicModel.playURL.originURLList.firstObject];
-					      [DYYYManager downloadMedia:url mediaType:MediaTypeAudio audio:nil completion:nil];
+					       [DYYYManager downloadMedia:url mediaType:MediaTypeAudio audio:nil completion:nil];
 				      }
 				    }];
 			[actions addObject:downloadAudioAction];
 		}
 
-		// 添加接口保存选项
-		if (DYYYGetBool(@"DYYYDoubleInterfaceDownload")) {
-			NSString *apiKey = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYInterfaceDownload"];
-			if (apiKey.length > 0) {
-				AWEUserSheetAction *apiDownloadAction = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"接口保存"
-															  imgName:nil
-															  handler:^{
-															    NSString *shareLink = [awemeModel valueForKey:@"shareURL"];
-															    if (shareLink.length == 0) {
-																    [DYYYUtils showToast:@"无法获取分享链接"];
-																    return;
-															    }
-
-															    // 使用封装的方法进行解析下载
-															    [DYYYManager parseAndDownloadVideoWithShareLink:shareLink apiKey:apiKey];
-															  }];
-				[actions addObject:apiDownloadAction];
-			}
-		}
-
-		// 添加制作视频功能
-		if (DYYYGetBool(@"DYYYDoubleCreateVideo") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleCreateVideo"]) {
+               // 添加制作视频功能	
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleCreateVideo"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleCreateVideo"]) {
 			if (isImageContent) {
 				AWEUserSheetAction *createVideoAction = [NSClassFromString(@"AWEUserSheetAction")
-				    actionWithTitle:@"制作视频"
+				    actionWithTitle:@"合成视频"
 					    imgName:nil
 					    handler:^{
 					      // 收集普通图片URL
@@ -4864,21 +4924,43 @@ static AWEIMReusableCommonCell *currentCell;
 			}
 		}
 
+
+		// 添加接口保存选项
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleInterfaceDownload"]) {
+			NSString *apiKey = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYInterfaceDownload"];
+			if (apiKey.length > 0) {
+				AWEUserSheetAction *apiDownloadAction = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"接口解析"
+															  imgName:nil
+															  handler:^{
+															    NSString *shareLink = [awemeModel valueForKey:@"shareURL"];
+															    if (shareLink.length == 0) {
+																    [DYYYUtils showToast:@"无法获取分享链接"];
+																    return;
+															    }
+
+															    // 使用封装的方法进行解析下载
+															    [DYYYManager parseAndDownloadVideoWithShareLink:shareLink apiKey:apiKey];
+															  }];
+				[actions addObject:apiDownloadAction];
+			}
+		}
+
 		// 添加复制文案选项
-		if (DYYYGetBool(@"DYYYDoubleTapCopyDesc") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapCopyDesc"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapCopyDesc"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapCopyDesc"]) {
 
 			AWEUserSheetAction *copyTextAction = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"复制文案"
 													       imgName:nil
 													       handler:^{
 														 NSString *descText = [awemeModel valueForKey:@"descriptionString"];
 														 [[UIPasteboard generalPasteboard] setString:descText];
-														 [DYYYToast showSuccessToastWithMessage:@"文案已复制"];
+														[DYYYToast showSuccessToastWithMessage:@"文案已复制"];
+
 													       }];
 			[actions addObject:copyTextAction];
 		}
 
 		// 添加打开评论区选项
-		if (DYYYGetBool(@"DYYYDoubleTapComment") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapComment"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapComment"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapComment"]) {
 
 			AWEUserSheetAction *openCommentAction = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"打开评论"
 														  imgName:nil
@@ -4889,34 +4971,34 @@ static AWEIMReusableCommonCell *currentCell;
 		}
 
 		// 添加分享选项
-		if (DYYYGetBool(@"DYYYDoubleTapshowSharePanel") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapshowSharePanel"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapshowSharePanel"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapshowSharePanel"]) {
 
 			AWEUserSheetAction *showSharePanel = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"分享视频"
 													       imgName:nil
 													       handler:^{
-														 [self showSharePanel];
+														 [self showSharePanel]; // 执行分享操作
 													       }];
 			[actions addObject:showSharePanel];
 		}
 
 		// 添加点赞视频选项
-		if (DYYYGetBool(@"DYYYDoubleTapLike") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapLike"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapLike"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapLike"]) {
 
 			AWEUserSheetAction *likeAction = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"点赞视频"
 													   imgName:nil
 													   handler:^{
-													     [self performLikeAction];
+													     [self performLikeAction]; // 执行点赞操作
 													   }];
 			[actions addObject:likeAction];
 		}
 
 		// 添加长按面板
-		if (DYYYGetBool(@"DYYYDoubleTapshowDislikeOnVideo") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapshowDislikeOnVideo"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYDoubleTapshowDislikeOnVideo"] || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleTapshowDislikeOnVideo"]) {
 
 			AWEUserSheetAction *showDislikeOnVideo = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"长按面板"
 														   imgName:nil
 														   handler:^{
-														     [self showDislikeOnVideo];
+														     [self showDislikeOnVideo]; // 执行长按面板操作
 														   }];
 			[actions addObject:showDislikeOnVideo];
 		}
