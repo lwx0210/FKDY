@@ -1894,7 +1894,7 @@ extern "C"
           @{
               @"identifier" : @"DYYYForceDownloadEmotion",
               @"title" : @"保存评论区表情包",
-              @"subTitle" : @"iOS 17+的用户请长按表情本身保存",
+              @"subTitle" : @"iOS 17+ 需长按表情保存",
               @"detail" : @"",
               @"cellType" : @37,
               @"imageName" : @"ic_emoji_outlined"
@@ -1909,11 +1909,18 @@ extern "C"
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_emoji_outlined"},
+          @{@"identifier" : @"DYYYAllowConcurrentPlay",
+	    @"title" : @"启用应用同时播放",
+            @"subTitle" : @"播放其它音乐时打开抖音，音乐不会停止",
+	    @"detail" : @"",
+	    @"cellType" : @37,
+	    @"imageName" : @"ic_vertrianglesquareonsquare_outlined_20"},
           @{@"identifier" : @"DYYYHapticFeedbackEnabled",
-            @"title" : @"下载完成震动反馈",
-            @"detail" : @"",
-            @"cellType" : @6,
-            @"imageName" : @"ic_gearsimplify_outlined_20"}
+	    @"title" : @"启用保存媒体反馈",
+            @"subTitle" : @"需先在手机设置中开启系统触感反馈",
+	    @"detail" : @"",
+	    @"cellType" : @37,
+	    @"imageName" : @"ic_gearsimplify_outlined_20"}
       ];
 
       for (NSDictionary *dict in downloadSettings) {
@@ -2519,14 +2526,17 @@ extern "C"
               @"cellType" : @37,
               @"imageName" : @"ic_circlearrowin_outlined_20"
           },
-          @{
-              @"identifier" : @"DYYYVideoGesture",
-              @"title" : @"横屏视频交互增强",
-              @"subTitle" : @"启用横屏视频的手势功能",
-              @"detail" : @"",
-              @"cellType" : @37,
-              @"imageName" : @"ic_phonearrowdown_outlined_20"
-          },
+           @{@"identifier" : @"DYYYtacitanswer",
+	     @"title" : @"启用突破默契回答",
+	     @"detail" : @"",
+	     @"cellType" : @6,
+	     @"imageName" : @"ic_eye_outlined_20"},
+	  @{@"identifier" : @"DYYYVideoGesture",
+	    @"title" : @"启用横屏交互增强",
+            @"subTitle" : @"横屏播放时，左右边缘上下滑动调节音量和亮度",
+	    @"detail" : @"",
+	    @"cellType" : @37,
+	    @"imageName" : @"ic_phonearrowdown_outlined_20"},
           @{
               @"identifier" : @"DYYYDisableAutoEnterLive",
               @"title" : @"禁用自动进入直播",
