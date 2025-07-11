@@ -214,84 +214,77 @@ extern "C"
       // 【视频播放设置】分类
       NSMutableArray<AWESettingItemModel *> *videoItems = [NSMutableArray array];
       NSArray *videoSettings = @[
-          @{
-              @"identifier" : @"DYYYVideoBGColor",
-              @"title" : @"视频背景颜色",
-              @"subTitle" : @"可以自定义部分横屏视频的背景颜色",
-              @"detail" : @"",
-              @"cellType" : @20,
-              @"imageName" : @"ic_tv_outlined_20"
-          },
-          @{@"identifier" : @"DYYYisShowScheduleDisplay",
-            @"title" : @"显示进度时长",
-            @"detail" : @"",
-            @"cellType" : @6,
-            @"imageName" : @"ic_playertime_outlined_20"},
-          @{@"identifier" : @"DYYYScheduleStyle",
-            @"title" : @"进度时长样式",
-            @"detail" : @"",
-            @"cellType" : @26,
-            @"imageName" : @"ic_playertime_outlined_20"},
-          @{@"identifier" : @"DYYYProgressLabelColor",
-            @"title" : @"进度标签颜色",
-            @"detail" : @"十六进制",
-            @"cellType" : @26,
-            @"imageName" : @"ic_playertime_outlined_20"},
-          @{@"identifier" : @"DYYYTimelineVerticalPosition",
-            @"title" : @"进度纵轴位置",
-            @"detail" : @"-12.5",
-            @"cellType" : @26,
-            @"imageName" : @"ic_playertime_outlined_20"},
-          @{@"identifier" : @"DYYYHideVideoProgress",
-            @"title" : @"隐藏视频进度",
-            @"detail" : @"",
-            @"cellType" : @6,
-            @"imageName" : @"ic_playertime_outlined_20"},
-          @{
-              @"identifier" : @"DYYYisEnableAutoPlay",
-              @"title" : @"启用自动播放",
-              @"subTitle" : @"暂时仅支持推荐、搜索和个人主页的自动连播",
-              @"detail" : @"",
-              @"cellType" : @37,
-              @"imageName" : @"ic_play_outlined_12"
-          },
-          @{@"identifier" : @"DYYYDefaultSpeed",
-            @"title" : @"设置默认倍速",
-            @"detail" : @"",
-            @"cellType" : @26,
-            @"imageName" : @"ic_speed_outlined_20"},
-          @{@"identifier" : @"DYYYLongPressSpeed",
-            @"title" : @"设置长按倍速",
-            @"detail" : @"",
-            @"cellType" : @26,
-            @"imageName" : @"ic_speed_outlined_20"},
-          @{@"identifier" : @"DYYYisEnableArea",
-            @"title" : @"时间属地显示",
-            @"detail" : @"",
-            @"cellType" : @6,
-            @"imageName" : @"ic_location_outlined_20"},
-          @{
-              @"identifier" : @"DYYYGeonamesUsername",
-              @"title" : @"国外解析账号",
-              @"subTitle" : @"使用 Geonames.org 账号解析国外 IP 属地",
-              @"detail" : @"",
-              @"cellType" : @20,
-              @"imageName" : @"ic_location_outlined_20"
-          },
-          @{@"identifier" : @"DYYYLabelColor",
-            @"title" : @"属地标签颜色",
-            @"detail" : @"十六进制",
-            @"cellType" : @26,
-            @"imageName" : @"ic_location_outlined_20"},
-          @{
-              @"identifier" : @"DYYYEnabsuijiyanse",
-              @"title" : @"属地随机渐变",
-              @"subTitle" : @"启用后将覆盖上面的属地标签颜色",
-              @"detail" : @"",
-              @"cellType" : @37,
-              @"imageName" : @"ic_location_outlined_20"
-          }
-      ];
+ 		        @{@"identifier" : @"DYYYVideoBGColor",
+		          @"title" : @"视频背景颜色",
+			      @"subTitle" : @"可以自定义部分横屏视频的背景颜色",
+		          @"detail" : @"16进制,只填后6位即可,不填默认",
+		          @"cellType" : @20,
+		          @"imageName" : @"ic_tv_outlined_20"},
+			    @{@"identifier" : @"DYYYisShowScheduleDisplay",
+			      @"title" : @"显示进度时长",
+			      @"detail" : @"",
+			      @"cellType" : @6,
+			      @"imageName" : @"ic_playertime_outlined_20"},
+			    @{@"identifier" : @"DYYYScheduleStyle",
+			      @"title" : @"进度时长样式",
+			      @"detail" : @"",
+			      @"cellType" : @26,
+			      @"imageName" : @"ic_playertime_outlined_20"},
+			    @{@"identifier" : @"DYYYProgressLabelColor",
+			      @"title" : @"进度标签颜色",
+			      @"detail" : @"十六进制",
+			      @"cellType" : @26,
+			      @"imageName" : @"ic_playertime_outlined_20"},
+			    @{@"identifier" : @"DYYYTimelineVerticalPosition",
+			      @"title" : @"进度纵轴位置",
+			      @"detail" : @"-12.5",
+			      @"cellType" : @26,
+			      @"imageName" : @"ic_playertime_outlined_20"},
+			    @{@"identifier" : @"DYYYHideVideoProgress",
+			      @"title" : @"隐藏视频进度",
+			      @"detail" : @"",
+			      @"cellType" : @6,
+			      @"imageName" : @"ic_playertime_outlined_20"},
+			    @{@"identifier" : @"DYYYisEnableAutoPlay",
+			      @"title" : @"启用自动播放",
+                  @"subTitle" : @"暂时仅支持首页.搜索和个人主页的连播",
+			      @"detail" : @"",
+			      @"cellType" : @37,
+			      @"imageName" : @"ic_play_outlined_12"},
+			    @{@"identifier" : @"DYYYDefaultSpeed",
+			      @"title" : @"设置默认倍速",
+			      @"detail" : @"",
+			      @"cellType" : @26,
+			      @"imageName" : @"ic_speed_outlined_20"},
+	            @{@"identifier" : @"DYYYLongPressSpeed",
+		          @"title" : @"设置长按倍速",
+		          @"detail" : @"",
+		          @"cellType" : @26,
+		          @"imageName" : @"ic_speed_outlined_20"},
+			    @{@"identifier" : @"DYYYisEnableArea",
+			      @"title" : @"属地时间显示",
+			      @"detail" : @"",
+			      @"cellType" : @6,
+			      @"imageName" : @"ic_location_outlined_20"},
+			    @{@"identifier" : @"DYYYGeonamesUsername",
+		          @"title" : @"属地国外解析",
+			      @"subTitle" : @"使用 Geonames.org 账号解析国外 IP 属地",
+		          @"detail" : @"此处填写网站的用户名,不填默认",
+		          @"cellType" : @20,
+		          @"imageName" : @"ic_location_outlined_20"},
+		        @{@"identifier" : @"DYYYLabelColor",
+		          @"title" : @"属地时间颜色",
+		          @"subTitle" : @"填入 rainbow 使用渐变颜色",
+		          @"detail" : @"16进制,只填后6位即可,不填默认",
+		          @"cellType" : @20,
+		          @"imageName" : @"ic_location_outlined_20"},
+			    @{@"identifier" : @"DYYYEnabsuijiyanse",
+			      @"title" : @"属地颜色随机",
+                  @"subTitle" : @"启用后会覆盖时间颜色",
+			      @"detail" : @"",
+			      @"cellType" : @37,
+			      @"imageName" : @"ic_location_outlined_20"}
+	  ];
 
       for (NSDictionary *dict in videoSettings) {
           AWESettingItemModel *item = [DYYYSettingsHelper createSettingItem:dict cellTapHandlers:cellTapHandlers];
@@ -336,7 +329,8 @@ extern "C"
               NSString *savedStyle = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYScheduleStyle"];
               item.detail = savedStyle ?: @"默认";
               item.cellTappedBlock = ^{
-                NSArray *styleOptions = @[ @"进度条两侧上下", @"进度条左侧剩余", @"进度条左侧完整", @"进度条右侧剩余", @"进度条右侧完整" ];
+                NSArray *styleOptions = @[ @"进度条两侧上下", @"进度条两侧左右", @"进度条左侧剩余", @"进度条左侧完整", @"进度条右侧剩余", @"进度条右侧完整" ];
+
 
                 [DYYYOptionsSelectionView showWithPreferenceKey:@"DYYYScheduleStyle"
                                                    optionsArray:styleOptions
@@ -360,7 +354,7 @@ extern "C"
             @"cellType" : @26,
             @"imageName" : @"ic_video_outlined_20"},
           @{@"identifier" : @"DYYYEnableVideoHighestQuality",
-            @"title" : @"视频默认最高画质",
+            @"title" : @"默认最高画质",
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_squaretriangletwo_outlined_20"},
@@ -507,7 +501,7 @@ extern "C"
                 // 将保存的逗号分隔字符串转换为数组
                 NSString *savedKeywords = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYfilterUsers"] ?: @"";
                 NSArray *keywordArray = [savedKeywords length] > 0 ? [savedKeywords componentsSeparatedByString:@","] : @[];
-                DYYYKeywordListView *keywordListView = [[DYYYKeywordListView alloc] initWithTitle:@"过滤用户列表" keywords:keywordArray];
+                DYYYKeywordListView *keywordListView = [[DYYYKeywordListView alloc] initWithTitle:@"已过滤的视频作者" keywords:keywordArray];
                 keywordListView.onConfirm = ^(NSArray *keywords) {
                   NSString *keywordString = [keywords componentsJoinedByString:@","];
                   [DYYYSettingsHelper setUserDefaults:keywordString forKey:@"DYYYfilterUsers"];
@@ -523,7 +517,7 @@ extern "C"
               item.cellTappedBlock = ^{
                 NSString *savedKeywords = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYfilterKeywords"] ?: @"";
                 NSArray *keywordArray = [savedKeywords length] > 0 ? [savedKeywords componentsSeparatedByString:@","] : @[];
-                DYYYKeywordListView *keywordListView = [[DYYYKeywordListView alloc] initWithTitle:@"设置过滤关键词" keywords:keywordArray];
+                DYYYKeywordListView *keywordListView = [[DYYYKeywordListView alloc] initWithTitle:@"已过滤的视频文案" keywords:keywordArray];
                 keywordListView.onConfirm = ^(NSArray *keywords) {
                   NSString *keywordString = [keywords componentsJoinedByString:@","];
 
@@ -705,7 +699,7 @@ extern "C"
       NSArray *titleSettings = @[
           @{@"identifier" : @"DYYYModifyTopTabText",
             @"title" : @"设置顶栏标题",
-            @"detail" : @"标题=修改#标题=修改",
+            @"detail" : @"标题=修改 例如：推荐=DYYY",
             @"cellType" : @26,
             @"imageName" : @"ic_tag_outlined_20"},
           @{@"identifier" : @"DYYYIndexTitle",
@@ -741,7 +735,7 @@ extern "C"
                 DYYYKeywordListView *keywordListView = [[DYYYKeywordListView alloc] initWithTitle:@"设置顶栏标题" keywords:pairArray];
                 keywordListView.addItemTitle = @"添加标题修改";
                 keywordListView.editItemTitle = @"编辑标题修改";
-                keywordListView.inputPlaceholder = @"原标题=新标题";
+                keywordListView.inputPlaceholder = @"标题=修改 例如：推荐=DYYY";
                 keywordListView.onConfirm = ^(NSArray *keywords) {
                   NSString *keywordString = [keywords componentsJoinedByString:@"#"];
                   [DYYYSettingsHelper setUserDefaults:keywordString forKey:@"DYYYModifyTopTabText"];
@@ -753,6 +747,58 @@ extern "C"
           }
           [titleItems addObject:item];
       }
+
+      // 【个人自定义】分类
+	  NSMutableArray<AWESettingItemModel *> *Masturbation = [NSMutableArray array];
+	  NSArray *MasturbationSettings = @[
+     		    @{@"identifier" : @"DYYYEnableSocialStatsCustom",
+			      @"title" : @"启用数量伪造",
+                  @"subTitle" : @"此功能是全局修改，非必要请谨慎开启！",
+			      @"detail" : @"",
+			      @"cellType" : @37,
+			      @"imageName" : @"ic_personcircleclean_outlined_20"},
+			    @{@"identifier" : @"DYYYCustomLikes",
+			      @"title" : @"获赞数量伪造",
+			      @"detail" : @"",
+			      @"cellType" : @26,
+			      @"imageName" : @"ic_heart_outlined_20"},
+			    @{@"identifier" : @"DYYYCustomMutual",
+			      @"title" : @"互关数量伪造",
+			      @"detail" : @"",
+			      @"cellType" : @26,
+			      @"imageName" : @"ic_usertwo_outlined_20"},
+			    @{@"identifier" : @"DYYYCustomFollowing",
+			      @"title" : @"关注数量伪造",
+			      @"detail" : @"",
+			      @"cellType" : @26,
+			      @"imageName" : @"ic_usertwo_outlined_20"},
+			    @{@"identifier" : @"DYYYCustomFollowers",
+			      @"title" : @"粉丝数量伪造",
+			      @"detail" : @"",
+			      @"cellType" : @26,
+			      @"imageName" : @"ic_usertwo_outlined_20"},
+	            @{@"identifier" : @"DYYYEnableDisguise",
+			      @"title" : @"启用账号伪造",
+			      @"detail" : @"",
+			      @"cellType" : @6,
+			      @"imageName" : @"ic_user_outlined_20"},
+			    @{@"identifier" : @"DYYYDisguiseid",
+			      @"title" : @"抖音号码伪造",
+			      @"detail" : @"请输入1-7位数字或字母",
+			      @"cellType" : @26,
+			      @"imageName" : @"ic_user_outlined_20"},
+	            @{@"identifier" : @"DYYYDisguisenc",
+			      @"title" : @"账号昵称伪造",
+			      @"detail" : @"不填默认",
+			      @"cellType" : @26,
+			      @"imageName" : @"ic_user_outlined_20"}
+
+	  ];
+
+	  for (NSDictionary *dict in MasturbationSettings) {
+		  AWESettingItemModel *item = [DYYYSettingsHelper createSettingItem:dict cellTapHandlers:cellTapHandlers];
+		  [Masturbation addObject:item];
+	  }
 
       // 【图标自定义】分类
       NSMutableArray<AWESettingItemModel *> *iconItems = [NSMutableArray array];
@@ -769,6 +815,7 @@ extern "C"
       [sections addObject:[DYYYSettingsHelper createSectionWithTitle:@"透明度设置" items:transparencyItems]];
       [sections addObject:[DYYYSettingsHelper createSectionWithTitle:@"缩放与大小" items:scaleItems]];
       [sections addObject:[DYYYSettingsHelper createSectionWithTitle:@"标题自定义" items:titleItems]];
+	  [sections addObject:[DYYYSettingsHelper createSectionWithTitle:@"个人自定义" items:Masturbation]];
       [sections addObject:[DYYYSettingsHelper createSectionWithTitle:@"图标自定义" items:iconItems]];
       // 创建并组织所有section
       // 创建并推入二级设置页面
