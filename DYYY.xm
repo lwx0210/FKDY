@@ -958,17 +958,7 @@ static CGFloat rightLabelRightMargin = -1;
 	} else {
 	}
 }
-- (void)setAlpha:(CGFloat)alpha {
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYisShowScheduleDisplay"]) {
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYHideVideoProgress"]) {
-			%orig(0);
-		} else {
-			%orig(1.0);
-		}
-	} else {
-		%orig;
-	}
-}
+
 - (void)setLimitUpperActionArea:(BOOL)arg1 {
     %orig;
 
