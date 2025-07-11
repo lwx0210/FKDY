@@ -1015,7 +1015,43 @@ static CGFloat rightLabelRightMargin = -1;
         [self setNeedsLayout];
     }
 }
+- (void)applyCustomProgressStyle {
+	NSString *scheduleStyle = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYScheduleStyle"];
+	UIView *parentView = self.superview;
 
+	if (!parentView)
+		return;
+
+	if ([scheduleStyle isEqualToString:@"进度条两侧左右"]) {
+		// 尝试获取标签
+		UILabel *leftLabel = [parentView viewWithTag:10001];
+		UILabel *rightLabel = [parentView viewWithTag:10002];
+
+		if (leftLabel && rightLabel) {
+			CGFloat padding = 5.0;
+			CGFloat sliderY = self.frame.origin.y;
+			CGFloat sliderHeight = self.frame.size.height;
+			CGFloat sliderX = leftLabel.frame.origin.x + leftLabel.frame.size.width + padding;
+			CGFloat sliderWidth = rightLabel.frame.origin.x - padding - sliderX;
+
+			if (sliderWidth < 0)
+				sliderWidth = 0;
+
+			self.frame = CGRectMake(sliderX, sliderY, sliderWidth, sliderHeight);
+		} else {
+			CGFloat fallbackWidthPercent = 0.80;
+			CGFloat parentWidth = parentView.bounds.size.width;
+			CGFloat fallbackWidth = parentWidth * fallbackWidthPercent;
+			CGFloat fallbackX = (parentWidth - fallbackWidth) / 2.0;
+			// 使用 self.frame 获取当前 Y 和 Height (通常由 %orig 设置)
+			CGFloat currentY = self.frame.origin.y;
+			CGFloat currentHeight = self.frame.size.height;
+			// 应用回退 frame
+			self.frame = CGRectMake(fallbackX, currentY, fallbackWidth, currentHeight);
+		}
+	} else {
+	}
+}
 %end
 
 %hook AWEPlayInteractionProgressController
