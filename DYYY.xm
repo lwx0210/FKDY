@@ -903,11 +903,23 @@
 
 // layoutSubviews 保持不变
 - (void)layoutSubviews {
-	%orig;
-	[self applyCustomProgressStyle];
+    %orig;
 }
 
-%new
+- (void)setAlpha:(CGFloat)alpha {
+    if (DYYYGetBool(@"DYYYisShowScheduleDisplay")) {
+        if (DYYYGetBool(@"DYYYHideVideoProgress")) {
+            %orig(0);
+        } else {
+            %orig(1.0);
+        }
+    } else {
+        %orig;
+    }
+}
+
+static CGFloat leftLabelLeftMargin = -1;
+static CGFloat rightLabelRightMargin = -1;
 
 - (void)applyCustomProgressStyle {
 	NSString *scheduleStyle = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYScheduleStyle"];
