@@ -921,158 +921,99 @@
 static CGFloat leftLabelLeftMargin = -1;
 static CGFloat rightLabelRightMargin = -1;
 
-- (void)applyCustomProgressStyle {
-	NSString *scheduleStyle = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYScheduleStyle"];
-	UIView *parentView = self.superview;
-
-	if (!parentView)
-		return;
-
-	if ([scheduleStyle isEqualToString:@"进度条两侧左右"]) {
-		// 尝试获取标签
-		UILabel *leftLabel = [parentView viewWithTag:10001];
-		UILabel *rightLabel = [parentView viewWithTag:10002];
-
-		if (leftLabel && rightLabel) {
-			CGFloat padding = 5.0;
-			CGFloat sliderY = self.frame.origin.y;
-			CGFloat sliderHeight = self.frame.size.height;
-			CGFloat sliderX = leftLabel.frame.origin.x + leftLabel.frame.size.width + padding;
-			CGFloat sliderWidth = rightLabel.frame.origin.x - padding - sliderX;
-
-			if (sliderWidth < 0)
-				sliderWidth = 0;
-
-			self.frame = CGRectMake(sliderX, sliderY, sliderWidth, sliderHeight);
-		} else {
-			CGFloat fallbackWidthPercent = 0.80;
-			CGFloat parentWidth = parentView.bounds.size.width;
-			CGFloat fallbackWidth = parentWidth * fallbackWidthPercent;
-			CGFloat fallbackX = (parentWidth - fallbackWidth) / 2.0;
-			// 使用 self.frame 获取当前 Y 和 Height (通常由 %orig 设置)
-			CGFloat currentY = self.frame.origin.y;
-			CGFloat currentHeight = self.frame.size.height;
-			// 应用回退 frame
-			self.frame = CGRectMake(fallbackX, currentY, fallbackWidth, currentHeight);
-		}
-	} else {
-	}
-}
-
-- (void)setAlpha:(CGFloat)alpha {
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYisShowScheduleDisplay"]) {
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYHideVideoProgress"]) {
-			%orig(0);
-		} else {
-			%orig(1.0);
-		}
-	} else {
-		%orig;
-	}
-}
-
-static CGFloat leftLabelLeftMargin = -1;
-static CGFloat rightLabelRightMargin = -1;
-
 - (void)setLimitUpperActionArea:(BOOL)arg1 {
-	%orig;
+    %orig;
 
-	NSString *durationFormatted = [self.progressSliderDelegate formatTimeFromSeconds:floor(self.progressSliderDelegate.model.videoDuration / 1000)];
+    NSString *durationFormatted = [self.progressSliderDelegate formatTimeFromSeconds:floor(self.progressSliderDelegate.model.videoDuration / 1000)];
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYisShowScheduleDisplay"]) {
-		UIView *parentView = self.superview;
-		if (!parentView)
-			return;
+    if (DYYYGetBool(@"DYYYisShowScheduleDisplay")) {
+        UIView *parentView = self.superview;
+        if (!parentView)
+            return;
 
-		[[parentView viewWithTag:10001] removeFromSuperview];
-		[[parentView viewWithTag:10002] removeFromSuperview];
+        [[parentView viewWithTag:10001] removeFromSuperview];
+        [[parentView viewWithTag:10002] removeFromSuperview];
 
-		CGRect sliderOriginalFrameInParent = [self convertRect:self.bounds toView:parentView];
-		CGRect sliderFrame = self.frame;
+        CGRect sliderOriginalFrameInParent = [self convertRect:self.bounds toView:parentView];
+        CGRect sliderFrame = self.frame;
 
-		CGFloat verticalOffset = -12.5;
-		NSString *offsetValueString = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYTimelineVerticalPosition"];
-		if (offsetValueString.length > 0) {
-			CGFloat configOffset = [offsetValueString floatValue];
-			if (configOffset != 0)
-				verticalOffset = configOffset;
-		}
+        CGFloat verticalOffset = -12.5;
+        NSString *offsetValueString = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYTimelineVerticalPosition"];
+        if (offsetValueString.length > 0) {
+            CGFloat configOffset = [offsetValueString floatValue];
+            if (configOffset != 0)
+                verticalOffset = configOffset;
+        }
 
-		NSString *scheduleStyle = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYScheduleStyle"];
-		BOOL showRemainingTime = [scheduleStyle isEqualToString:@"进度条右侧剩余"];
-		BOOL showCompleteTime = [scheduleStyle isEqualToString:@"进度条右侧完整"];
-		BOOL showLeftRemainingTime = [scheduleStyle isEqualToString:@"进度条左侧剩余"];
-		BOOL showLeftCompleteTime = [scheduleStyle isEqualToString:@"进度条左侧完整"];
+        NSString *scheduleStyle = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYScheduleStyle"];
+        BOOL showRemainingTime = [scheduleStyle isEqualToString:@"进度条右侧剩余"];
+        BOOL showCompleteTime = [scheduleStyle isEqualToString:@"进度条右侧完整"];
+        BOOL showLeftRemainingTime = [scheduleStyle isEqualToString:@"进度条左侧剩余"];
+        BOOL showLeftCompleteTime = [scheduleStyle isEqualToString:@"进度条左侧完整"];
 
-		NSString *labelColorHex = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYProgressLabelColor"];
-		UIColor *labelColor = [UIColor whiteColor];
-		if (labelColorHex && labelColorHex.length > 0) {
-			SEL colorSelector = NSSelectorFromString(@"colorWithHexString:");
-			Class dyyyManagerClass = NSClassFromString(@"DYYYManager");
-			if (dyyyManagerClass && [dyyyManagerClass respondsToSelector:colorSelector]) {
-				labelColor = [dyyyManagerClass performSelector:colorSelector withObject:labelColorHex];
-			}
-		}
+        NSString *labelColorHex = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYProgressLabelColor"];
 
-		CGFloat labelYPosition = sliderOriginalFrameInParent.origin.y + verticalOffset;
-		CGFloat labelHeight = 15.0;
-		UIFont *labelFont = [UIFont systemFontOfSize:8];
+        CGFloat labelYPosition = sliderOriginalFrameInParent.origin.y + verticalOffset;
+        CGFloat labelHeight = 15.0;
+        UIFont *labelFont = [UIFont systemFontOfSize:8];
 
-		if (!showRemainingTime && !showCompleteTime) {
-			UILabel *leftLabel = [[UILabel alloc] init];
-			leftLabel.backgroundColor = [UIColor clearColor];
-			leftLabel.textColor = labelColor;
-			leftLabel.font = labelFont;
-			leftLabel.tag = 10001;
-			if (showLeftRemainingTime)
-				leftLabel.text = @"00:00";
-			else if (showLeftCompleteTime)
-				leftLabel.text = [NSString stringWithFormat:@"00:00/%@", durationFormatted];
-			else
-				leftLabel.text = @"00:00";
+        if (!showRemainingTime && !showCompleteTime) {
+            UILabel *leftLabel = [[UILabel alloc] init];
+            leftLabel.backgroundColor = [UIColor clearColor];
+            leftLabel.font = labelFont;
+            leftLabel.tag = 10001;
+            if (showLeftRemainingTime)
+                leftLabel.text = @"00:00";
+            else if (showLeftCompleteTime)
+                leftLabel.text = [NSString stringWithFormat:@"00:00/%@", durationFormatted];
+            else
+                leftLabel.text = @"00:00";
 
-			[leftLabel sizeToFit];
+            [leftLabel sizeToFit];
 
-			if (leftLabelLeftMargin == -1) {
-				leftLabelLeftMargin = sliderFrame.origin.x;
-			}
+            if (leftLabelLeftMargin == -1) {
+                leftLabelLeftMargin = sliderFrame.origin.x;
+            }
 
-			leftLabel.frame = CGRectMake(leftLabelLeftMargin, labelYPosition, leftLabel.frame.size.width, labelHeight);
-			[parentView addSubview:leftLabel];
-		}
+            leftLabel.frame = CGRectMake(leftLabelLeftMargin, labelYPosition, leftLabel.frame.size.width, labelHeight);
+            [parentView addSubview:leftLabel];
 
-		if (!showLeftRemainingTime && !showLeftCompleteTime) {
-			UILabel *rightLabel = [[UILabel alloc] init];
-			rightLabel.backgroundColor = [UIColor clearColor];
-			rightLabel.textColor = labelColor;
-			rightLabel.font = labelFont;
-			rightLabel.tag = 10002;
-			if (showRemainingTime)
-				rightLabel.text = @"00:00";
-			else if (showCompleteTime)
-				rightLabel.text = [NSString stringWithFormat:@"00:00/%@", durationFormatted];
-			else
-				rightLabel.text = durationFormatted;
+            [DYYYUtils applyColorSettingsToLabel:leftLabel colorHexString:labelColorHex];
+        }
 
-			[rightLabel sizeToFit];
+        if (!showLeftRemainingTime && !showLeftCompleteTime) {
+            UILabel *rightLabel = [[UILabel alloc] init];
+            rightLabel.backgroundColor = [UIColor clearColor];
+            rightLabel.font = labelFont;
+            rightLabel.tag = 10002;
+            if (showRemainingTime)
+                rightLabel.text = @"00:00";
+            else if (showCompleteTime)
+                rightLabel.text = [NSString stringWithFormat:@"00:00/%@", durationFormatted];
+            else
+                rightLabel.text = durationFormatted;
 
-			if (rightLabelRightMargin == -1) {
-				rightLabelRightMargin = sliderFrame.origin.x + sliderFrame.size.width - rightLabel.frame.size.width;
-			}
+            [rightLabel sizeToFit];
 
-			rightLabel.frame = CGRectMake(rightLabelRightMargin, labelYPosition, rightLabel.frame.size.width, labelHeight);
-			[parentView addSubview:rightLabel];
-		}
+            if (rightLabelRightMargin == -1) {
+                rightLabelRightMargin = sliderFrame.origin.x + sliderFrame.size.width - rightLabel.frame.size.width;
+            }
 
-		[self setNeedsLayout];
-	} else {
-		UIView *parentView = self.superview;
-		if (parentView) {
-			[[parentView viewWithTag:10001] removeFromSuperview];
-			[[parentView viewWithTag:10002] removeFromSuperview];
-		}
-		[self setNeedsLayout];
-	}
+            rightLabel.frame = CGRectMake(rightLabelRightMargin, labelYPosition, rightLabel.frame.size.width, labelHeight);
+            [parentView addSubview:rightLabel];
+
+            [DYYYUtils applyColorSettingsToLabel:rightLabel colorHexString:labelColorHex];
+        }
+
+        [self setNeedsLayout];
+    } else {
+        UIView *parentView = self.superview;
+        if (parentView) {
+            [[parentView viewWithTag:10001] removeFromSuperview];
+            [[parentView viewWithTag:10002] removeFromSuperview];
+        }
+        [self setNeedsLayout];
+    }
 }
 
 %end
