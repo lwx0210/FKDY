@@ -1,5 +1,5 @@
-#import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
+#import <UIKit/UIKit.h>
 
 // 获取指定类型设置，键名不存在或类型错误时返回nil
 #define DYYYGetBool(key) [[NSUserDefaults standardUserDefaults] boolForKey:key]
@@ -7,12 +7,7 @@
 #define DYYYGetInteger(key) [[NSUserDefaults standardUserDefaults] integerForKey:key]
 #define DYYYGetString(key) [[NSUserDefaults standardUserDefaults] stringForKey:key]
 #define DYYY_IGNORE_GLOBAL_ALPHA_TAG 114514
-typedef NS_ENUM(NSInteger, MediaType) {
-  MediaTypeVideo,
-  MediaTypeImage,
-  MediaTypeAudio,
-  MediaTypeHeic
-};
+typedef NS_ENUM(NSInteger, MediaType) { MediaTypeVideo, MediaTypeImage, MediaTypeAudio, MediaTypeHeic };
 
 static __weak UICollectionView *gFeedCV = nil;
 // 音量控制
@@ -28,9 +23,9 @@ static __weak UICollectionView *gFeedCV = nil;
 @end
 // 调节模式&全局状态
 typedef NS_ENUM(NSUInteger, DYEdgeMode) {
-  DYEdgeModeNone = 0,
-  DYEdgeModeBrightness = 1,
-  DYEdgeModeVolume = 2,
+    DYEdgeModeNone = 0,
+    DYEdgeModeBrightness = 1,
+    DYEdgeModeVolume = 2,
 };
 static DYEdgeMode gMode = DYEdgeModeNone;
 static CGFloat gStartY = 0.0;
@@ -129,7 +124,7 @@ static CGFloat gStartVal = 0.0;
 @property(nonatomic, strong) NSString *shareURL;
 @property(nonatomic, strong) id hotSpotLynxCardModel;
 @property(nonatomic, strong) AWELiveFollowFeedCellModel *cellRoom;
-@property(nonatomic, strong) id shareRecExtra; // 推荐视频专有属性
+@property(nonatomic, strong) id shareRecExtra;  // 推荐视频专有属性
 @property(nonatomic, strong) NSArray<AWEAwemeTextExtraModel *> *textExtras;
 @property(nonatomic, copy) NSString *itemTitle;
 @property(nonatomic, copy) NSString *descriptionSimpleString;
@@ -283,10 +278,6 @@ static CGFloat gStartVal = 0.0;
 - (void)speedButtonTapped:(id)sender;
 - (void)buttonTouchDown:(id)sender;
 - (void)buttonTouchUp:(id)sender;
-@end
-
-@interface UIView (Transparency)
-- (UIViewController *)firstAvailableUIViewController;
 @end
 
 @interface AWEFeedVideoButton : UIButton
@@ -985,9 +976,7 @@ static CGFloat gStartVal = 0.0;
 @property(retain, nonatomic) AWEButton *leftCancelButton;
 @property(retain, nonatomic) AWEButton *rightConfirmButton;
 
-- (void)configWithCloseButtonClickedBlock:(void (^)(void))closeButtonClickedBlock
-                           singleTapBlock:(void (^)(void))singleTapBlock
-                              toggleBlock:(void (^)(void))toggleBlock;
+- (void)configWithCloseButtonClickedBlock:(void (^)(void))closeButtonClickedBlock singleTapBlock:(void (^)(void))singleTapBlock toggleBlock:(void (^)(void))toggleBlock;
 - (void)configWithImageView:(UIImageView *)imageView
                   titleText:(NSString *)titleText
                 contentText:(NSString *)contentText
@@ -1310,28 +1299,4 @@ static CGFloat gStartVal = 0.0;
 
 @interface HTSEventForwardingView : UIView
 @property(copy, nonatomic) NSString *levelName;
-@end
-
-//修改id附加起始位 
-@interface AWEUserHomeAccessibilityViewV2 : UIView
-- (void)findAndModifyDouyinLabelInView:(UIView *)view;
-- (void)findAndModify:(UIView *)view;
-- (void)modifyNicknameInView:(UIView *)view;
-@end
-
-//数据伪造
-@interface AWEProfileSocialStatisticView : UIView
-- (void)setFansCount:(NSNumber *)count;
-- (void)setPraiseCount:(NSNumber *)count;
-- (void)setFollowingCount:(NSNumber *)count;
-- (void)setFriendCount:(NSNumber *)count;
-- (void)p_updateSocialStatisticContent:(BOOL)animated;
-@end
-
-@interface AWEProfileHeaderMyProfileViewController : UIViewController
-- (void)reloadSettings;
-@end
-
-//AI搜索
-@interface AWESearchKeyboardVoiceSearchEntranceView : UIView
 @end
