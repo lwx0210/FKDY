@@ -4587,6 +4587,7 @@ static AWEIMReusableCommonCell *currentCell;
 }
 %end
 
+//双击菜单
 %hook AWEPlayInteractionViewController
 
 - (void)onPlayer:(id)arg0 didDoubleClick:(id)arg1 {
@@ -4827,7 +4828,7 @@ static AWEIMReusableCommonCell *currentCell;
         if (DYYYGetBool(@"DYYYDoubleCreateVideo") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleCreateVideo"]) {
             if (isImageContent) {
                 AWEUserSheetAction *createVideoAction = [NSClassFromString(@"AWEUserSheetAction")
-                    actionWithTitle:@"制作视频"
+                    actionWithTitle:@"合成视频"
                             imgName:nil
                             handler:^{
                               // 收集普通图片URL
