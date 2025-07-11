@@ -1550,11 +1550,12 @@ extern "C"
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{@"identifier" : @"DYYYHidePanelBiserial",
-            @"title" : @"隐藏双列快捷入口",
-            @"detail" : @"",
-            @"cellType" : @6,
-            @"imageName" : @"ic_eyeslash_outlined_16"}
+	  @{@"identifier" : @"DYYYHidePanelBiserial",
+	    @"title" : @"隐藏双列快捷入口",
+            @"subTitle" : @"首页双指缩放不会展示双列视图",
+	    @"detail" : @"",
+	    @"cellType" : @37,
+	    @"imageName" : @"ic_eyeslash_outlined_16"}
       ];
 
       for (NSDictionary *dict in modernpanelSettings) {
@@ -1710,7 +1711,7 @@ extern "C"
             @"cellType" : @6,
             @"imageName" : @"ic_xmark_outlined_20"},
           @{@"identifier" : @"DYYYHideOtherChannel",
-            @"title" : @"移除顶栏其他",
+            @"title" : @"移除其它",
             @"detail" : @"",
             @"cellType" : @26,
             @"imageName" : @"ic_xmark_outlined_20"}
@@ -1836,7 +1837,7 @@ extern "C"
             @"cellType" : @6,
             @"imageName" : @"ic_cloudarrowdown_outlined_20"},
           @{@"identifier" : @"DYYYLongPressFilterUser",
-            @"title" : @"长按面板过滤用户",
+            @"title" : @"长按面板过滤作者",
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_userban_outlined_20"},
@@ -2669,7 +2670,7 @@ extern "C"
                       @"cellType" : @6,
                       @"imageName" : @"ic_cloudarrowdown_outlined_20"},
                     @{@"identifier" : @"DYYYDoubleCreateVideo",
-                      @"title" : @"制作视频",
+                      @"title" : @"合成视频",
                       @"detail" : @"",
                       @"cellType" : @6,
                       @"imageName" : @"ic_videosearch_outlined_20"},
@@ -2889,7 +2890,7 @@ extern "C"
       AWESettingItemModel *enableClearButton = [DYYYSettingsHelper
           createSettingItem:
               @{@"identifier" : @"DYYYEnableFloatClearButton",
-                @"title" : @"一键清屏按钮",
+                @"title" : @"启用一键清屏按钮",
                 @"detail" : @"",
                 @"cellType" : @6,
                 @"imageName" : @"ic_eyeslash_outlined_16"}];
@@ -2939,7 +2940,7 @@ extern "C"
       AWESettingItemModel *hideDanmakuButton = [DYYYSettingsHelper
           createSettingItem:
               @{@"identifier" : @"DYYYHideDanmaku",
-                @"title" : @"清屏隐藏弹幕",
+                @"title" : @"清屏隐藏所有弹幕",
                 @"detail" : @"",
                 @"cellType" : @6,
                 @"imageName" : @"ic_eyeslash_outlined_16"}];
@@ -2947,7 +2948,7 @@ extern "C"
 
       AWESettingItemModel *enableqingButton = [DYYYSettingsHelper createSettingItem:@{
           @"identifier" : @"DYYYEnabshijianjindu",
-          @"title" : @"清屏移除进度",
+          @"title" : @"清屏移除时间进度",
           @"subTitle" : @"清屏状态下完全移除时间进度条",
           @"detail" : @"",
           @"cellType" : @37,
@@ -2957,7 +2958,7 @@ extern "C"
       // 清屏隐藏时间进度
       AWESettingItemModel *enableqingButton1 = [DYYYSettingsHelper createSettingItem:@{
           @"identifier" : @"DYYYHideTimeProgress",
-          @"title" : @"清屏隐藏进度",
+          @"title" : @"清屏隐藏时间进度",
           @"subTitle" : @"原始位置可拖动时间进度条",
           @"detail" : @"",
           @"cellType" : @37,
@@ -2966,7 +2967,7 @@ extern "C"
       [clearButtonItems addObject:enableqingButton1];
       AWESettingItemModel *hideSliderButton = [DYYYSettingsHelper createSettingItem:@{
           @"identifier" : @"DYYYHideSlider",
-          @"title" : @"清屏隐藏滑条",
+          @"title" : @"清屏隐藏底部滑条",
           @"subTitle" : @"清屏状态下隐藏多图片下方的滑条",
           @"detail" : @"",
           @"cellType" : @37,
@@ -2975,7 +2976,7 @@ extern "C"
       [clearButtonItems addObject:hideSliderButton];
       AWESettingItemModel *hideChapterButton = [DYYYSettingsHelper createSettingItem:@{
           @"identifier" : @"DYYYHideChapter",
-          @"title" : @"清屏隐藏章节",
+          @"title" : @"清屏隐藏章节目录",
           @"subTitle" : @"清屏状态下隐藏部分视频出现的章节进度显示",
           @"detail" : @"",
           @"cellType" : @37,
@@ -2985,14 +2986,14 @@ extern "C"
       AWESettingItemModel *hideTabButton = [DYYYSettingsHelper
           createSettingItem:
               @{@"identifier" : @"DYYYHideTabBar",
-                @"title" : @"清屏隐藏底栏",
+                @"title" : @"清屏隐藏首页底栏",
                 @"detail" : @"",
                 @"cellType" : @6,
                 @"imageName" : @"ic_eyeslash_outlined_16"}];
       [clearButtonItems addObject:hideTabButton];
       AWESettingItemModel *hideSpeedButton = [DYYYSettingsHelper createSettingItem:@{
           @"identifier" : @"DYYYHideSpeed",
-          @"title" : @"清屏隐藏倍速",
+          @"title" : @"清屏隐藏倍速按钮",
           @"subTitle" : @"清屏状态下隐藏DYYY的倍速按钮",
           @"detail" : @"",
           @"cellType" : @37,
