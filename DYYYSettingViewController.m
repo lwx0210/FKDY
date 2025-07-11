@@ -353,9 +353,10 @@ typedef NS_ENUM(NSInteger, DYYYSettingItemType) {
             [DYYYSettingItem itemWithTitle:@"隐藏评论识别图片" key:@"DYYYHideCommentLongPressPictureSearch" type:DYYYSettingItemTypeSwitch]
          ],
         @[
-            [DYYYSettingItem itemWithTitle:@"启用新版玻璃面板" key:@"DYYYisEnableModern" type:DYYYSettingItemTypeSwitch],
-            [DYYYSettingItem itemWithTitle:@"启用面板跟随系统" key:@"DYYYModernPanelFollowSystem" type:DYYYSettingItemTypeSwitch],
-            [DYYYSettingItem itemWithTitle:@"启用新版浅色面板" key:@"DYYYisEnableModernLight" type:DYYYSettingItemTypeSwitch],
+            [DYYYSettingItem itemWithTitle:@"启用新版长按面板" key:@"DYYYisEnableModernPanel" type:DYYYSettingItemTypeSwitch],
+            [DYYYSettingItem itemWithTitle:@"长按面板玻璃效果" key:@"DYYYisLongPressPanelBlur" type:DYYYSettingItemTypeSwitch],
+            [DYYYSettingItem itemWithTitle:@"长按面板深色模式" key:@"DYYYisLongPressPanelDark" type:DYYYSettingItemTypeSwitch],
+            [DYYYSettingItem itemWithTitle:@"保存面板玻璃效果" key:@"DYYYisEnableSheetBlur" type:DYYYSettingItemTypeSwitch],,
             [DYYYSettingItem itemWithTitle:@"长按面板保存视频" key:@"DYYYLongPressSaveVideo" type:DYYYSettingItemTypeSwitch],
             [DYYYSettingItem itemWithTitle:@"长按面板保存封面" key:@"DYYYLongPressSaveCover" type:DYYYSettingItemTypeSwitch],
             [DYYYSettingItem itemWithTitle:@"长按面板保存音频" key:@"DYYYLongPressSaveAudio" type:DYYYSettingItemTypeSwitch],
@@ -390,7 +391,6 @@ typedef NS_ENUM(NSInteger, DYYYSettingItemType) {
             [DYYYSettingItem itemWithTitle:@"启用应用同时播放" key:@"DYYYAllowConcurrentPlay" type:DYYYSettingItemTypeSwitch],
             [DYYYSettingItem itemWithTitle:@"启用侧边快捷入口" key:@"DYYYentrance" type:DYYYSettingItemTypeSwitch],
             [DYYYSettingItem itemWithTitle:@"启用横屏交互增强" key:@"DYYYVideoGesture" type:DYYYSettingItemTypeSwitch],
-            [DYYYSettingItem itemWithTitle:@"启用骰子猜拳作弊" key:@"DYYYGameCheat" type:DYYYSettingItemTypeSwitch],
             [DYYYSettingItem itemWithTitle:@"启用突破默契回答" key:@"DYYYtacitanswer" type:DYYYSettingItemTypeSwitch],  
             [DYYYSettingItem itemWithTitle:@"启用评论长按复制" key:@"DYYYCommentCopyText" type:DYYYSettingItemTypeSwitch],
             [DYYYSettingItem itemWithTitle:@"启用简介长按复制" key:@"DYYYBioCopyText" type:DYYYSettingItemTypeSwitch],
