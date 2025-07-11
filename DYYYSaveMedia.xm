@@ -156,8 +156,7 @@ static bool getUserDefaults(NSString *key) { return [[NSUserDefaults standardUse
     }
 }
 
-static CGFloat leftLabelLeftMargin = -1;
-static CGFloat rightLabelRightMargin = -1;
+%new
 
 - (void)applyCustomProgressStyle {
 	NSString *scheduleStyle = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYScheduleStyle"];
@@ -208,10 +207,6 @@ static CGFloat rightLabelRightMargin = -1;
 		%orig;
 	}
 }
-
-static CGFloat leftLabelLeftMargin = -1;
-static CGFloat rightLabelRightMargin = -1;
-
 - (void)setLimitUpperActionArea:(BOOL)arg1 {
 	%orig;
 
