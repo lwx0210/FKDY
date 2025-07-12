@@ -18,27 +18,6 @@
 #import "DYYYToast.h"
 #import "DYYYUtils.h"
 
-// 强制硬件解码
-%hook TTVideoEngine
-
-- (void)setHardwareDecode:(BOOL)hardwareDecode {
-    if (DYYYGetBool(@"DYYYEnableVideoHWDecoder")) {
-        %orig(YES);
-    } else {
-        %orig(hardwareDecode);
-    }
-}
-
-- (void)setEnableAudioHardwareDecode:(BOOL)enableAudioHardwareDecode {
-    if (DYYYGetBool(@"DYYYEnableAudioHWDecoder")) {
-        %orig(YES);
-    } else {
-        %orig(enableAudioHardwareDecode);
-    }
-}
-
-%end
-
 // 关闭不可见水印
 %hook AWEHPChannelInvisibleWaterMarkModel
 
@@ -1178,7 +1157,6 @@ static CGFloat rightLabelRightMargin = -1;
 }
 %end
 
-//属地
 %hook AWEPlayInteractionTimestampElement
 
 - (id)timestampLabel {
@@ -1329,7 +1307,7 @@ static CGFloat rightLabelRightMargin = -1;
                                           }];
                 }
             } else if (![originalText containsString:cityName]) {
-                BOOL isDirectCity = [provinceName isEqualToString:cityName] || ([cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"]);
+                BOOL isDirectCity = [provinceName isEqualToString:cityName] || ([cityCode hasPrefix:@"11"] || [cityCode hasPrefix:@"12"] || [cityCode hasPrefix:@"31"] || [cityCode hasPrefix:@"50"]);
                 if (!self.model.ipAttribution) {
                     if (isDirectCity) {
                         label.text = [NSString stringWithFormat:@"%@  IP属地：%@", originalText, cityName];
