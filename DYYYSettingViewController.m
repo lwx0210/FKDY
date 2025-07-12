@@ -1,8 +1,9 @@
 #import "DYYYSettingViewController.h"
 #import "DYYYConstants.h"
-#import "DYYYOptionsSelectionView.h"
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSInteger, DYYYSettingItemType) { DYYYSettingItemTypeSwitch, DYYYSettingItemTypeTextField, DYYYSettingItemTypeSpeedPicker, DYYYSettingItemTypeOptions };
+typedef NS_ENUM(NSInteger, DYYYSettingItemType) { DYYYSettingItemTypeSwitch, DYYYSettingItemTypeTextField, DYYYSettingItemTypePicker };
 
 @interface DYYYSettingItem : NSObject
 
@@ -172,8 +173,8 @@ typedef NS_ENUM(NSInteger, DYYYSettingItemType) { DYYYSettingItemTypeSwitch, DYY
             [DYYYSettingItem itemWithTitle:@"设置顶栏透明" key:@"DYYYtopbartransparent" type:DYYYSettingItemTypeTextField placeholder:@"0-1小数"],
             [DYYYSettingItem itemWithTitle:@"设置全局透明" key:@"DYYYGlobalTransparency" type:DYYYSettingItemTypeTextField placeholder:@"0-1小数"],
             [DYYYSettingItem itemWithTitle:@"首页头像透明" key:@"DYYYAvatarViewTransparency" type:DYYYSettingItemTypeTextField placeholder:@"0-1小数"],                              
-            [DYYYSettingItem itemWithTitle:@"设置默认倍速" key:@"DYYYDefaultSpeed" type:DYYYSettingItemTypeSpeedPicker],
-            [DYYYSettingItem itemWithTitle:@"设置长按倍速" key:@"DYYYLongPressSpeed" type:DYYYSettingItemTypeSpeedPicker],
+            [DYYYSettingItem itemWithTitle:@"设置默认倍速" key:@"DYYYDefaultSpeed" type:DYYYSettingItemTypePicker],
+            [DYYYSettingItem itemWithTitle:@"设置长按倍速" key:@"DYYYLongPressSpeed" type:DYYYSettingItemTypePicker],
             [DYYYSettingItem itemWithTitle:@"右侧栏缩放度" key:@"DYYYElementScale" type:DYYYSettingItemTypeTextField placeholder:@"不填默认"],
             [DYYYSettingItem itemWithTitle:@"昵称文案缩放" key:@"DYYYNicknameScale" type:DYYYSettingItemTypeTextField placeholder:@"不填默认"],
             [DYYYSettingItem itemWithTitle:@"昵称下移距离" key:@"DYYYNicknameVerticalOffset" type:DYYYSettingItemTypeTextField placeholder:@"不填默认"],
@@ -381,9 +382,7 @@ typedef NS_ENUM(NSInteger, DYYYSettingItemType) { DYYYSettingItemTypeSwitch, DYY
             [DYYYSettingItem itemWithTitle:@"启用自动勾选原图" key:@"DYYYisAutoSelectOriginalPhoto" type:DYYYSettingItemTypeSwitch],
             [DYYYSettingItem itemWithTitle:@"启用保存他人头像" key:@"DYYYEnableSaveAvatar" type:DYYYSettingItemTypeSwitch],
             [DYYYSettingItem itemWithTitle:@"启用默认进入作品" key:@"DYYYDefaultEnterWorks" type:DYYYSettingItemTypeSwitch],
-            [DYYYSettingItem itemWithTitle:@"默认观看直播画质" key:@"DYYYLiveQuality" type:DYYYSettingItemTypeOptions],
-            [DYYYSettingItem itemWithTitle:@"启用提高视频画质" key:@"DYYYEnableVideoHighestQuality" type:DYYYSettingItemTypeSwitch],
-            [DYYYSettingItem itemWithTitle:@"启用视频硬件解码" key:@"DYYYEnableVideoHWDecoder" type:DYYYSettingItemTypeSwitch],
+            [DYYYSettingItem itemWithTitle:@"默认观看直播画质" key:@"DYYYLiveQuality" type:DYYYSettingItemTypePicker],
             [DYYYSettingItem itemWithTitle:@"启用音频硬件解码" key:@"DYYYEnableAudioHWDecoder" type:DYYYSettingItemTypeSwitch],
             [DYYYSettingItem itemWithTitle:@"启用应用同时播放" key:@"DYYYAllowConcurrentPlay" type:DYYYSettingItemTypeSwitch],
             [DYYYSettingItem itemWithTitle:@"启用侧边快捷入口" key:@"DYYYentrance" type:DYYYSettingItemTypeSwitch],
@@ -468,6 +467,40 @@ typedef NS_ENUM(NSInteger, DYYYSettingItemType) { DYYYSettingItemTypeSwitch, DYY
     colorChange.repeatCount = HUGE_VALF;
 
     [gradient addAnimation:colorChange forKey:@"colorChangeAnimation"];
+}
+
+#pragma mark - Helper Methods
+
+- (NSArray *)optionsForKey:(NSString *)key {
+    if ([key isEqualToString:@"DYYYDefaultSpeed"] || [key isEqualToString:@"DYYYLongPressSpeed"]) {
+        // 倍速选项
+        return @[ @0.75, @1.0, @1.25, @1.5, @2.0, @2.5, @3.0 ];
+    } else if ([key isEqualToString:@"DYYYLiveQuality"]) {
+        // 直播清晰度选项
+        return @[ @"蓝光帧彩", @"蓝光", @"超清", @"高清", @"标清", @"自动" ];
+    }
+    return @[];
+}
+
+- (NSString *)displayValueForKey:(NSString *)key value:(id)value {
+    if ([key isEqualToString:@"DYYYDefaultSpeed"] || [key isEqualToString:@"DYYYLongPressSpeed"]) {
+        // 倍速显示格式
+        float speedValue = [value floatValue];
+        return [NSString stringWithFormat:@"%.2f", speedValue];
+    } else if ([key isEqualToString:@"DYYYLiveQuality"]) {
+        // 直播清晰度直接显示
+        return value ?: @"自动";
+    }
+    return [NSString stringWithFormat:@"%@", value];
+}
+
+- (id)defaultValueForKey:(NSString *)key {
+    if ([key isEqualToString:@"DYYYDefaultSpeed"] || [key isEqualToString:@"DYYYLongPressSpeed"]) {
+        return @1.0;
+    } else if ([key isEqualToString:@"DYYYLiveQuality"]) {
+        return @"自动";
+    }
+    return nil;
 }
 
 #pragma mark - First Launch Agreement
@@ -652,33 +685,33 @@ typedef NS_ENUM(NSInteger, DYYYSettingItemType) { DYYYSettingItemTypeSwitch, DYY
         [textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingDidEnd];
         textField.tag = indexPath.section * 1000 + indexPath.row;
         cell.accessoryView = textField;
-    } else if (item.type == DYYYSettingItemTypeSpeedPicker) {
+    } else if (item.type == DYYYSettingItemTypePicker) {
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-        UITextField *speedField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 80, 30)];
-        // 根据对应的key获取倍速值，如果没有设置则使用默认值1.0
-        float currentSpeed = [[NSUserDefaults standardUserDefaults] floatForKey:item.key];
-        if (currentSpeed == 0) {
-            currentSpeed = 1.0;
+        UILabel *pickerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 44)];
+        // 获取当前值
+        id currentValue = [[NSUserDefaults standardUserDefaults] objectForKey:item.key];
+        if (!currentValue) {
+            currentValue = [self defaultValueForKey:item.key];
         }
-        speedField.text = [NSString stringWithFormat:@"%.2f", currentSpeed];
-        speedField.textColor = [UIColor whiteColor];
-        speedField.borderStyle = UITextBorderStyleNone;
-        speedField.backgroundColor = [UIColor clearColor];
-        speedField.textAlignment = NSTextAlignmentRight;
-        speedField.enabled = NO;
-
-        speedField.tag = indexPath.section * 1000 + indexPath.row;
-        cell.accessoryView = speedField;
-    } else if (item.type == DYYYSettingItemTypeOptions) {
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 30)];
-        NSString *value = [[NSUserDefaults standardUserDefaults] objectForKey:item.key] ?: @"自动";
-        label.text = value;
-        label.textColor = [UIColor whiteColor];
-        label.textAlignment = NSTextAlignmentRight;
-        label.tag = indexPath.section * 1000 + indexPath.row;
-        cell.accessoryView = label;
+        
+        pickerLabel.text = [self displayValueForKey:item.key value:currentValue];
+        pickerLabel.textColor = [UIColor whiteColor];
+        pickerLabel.textAlignment = NSTextAlignmentRight;
+        pickerLabel.tag = indexPath.section * 1000 + indexPath.row;
+        
+        // 添加垂直居中约束
+        pickerLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 80, 44)];
+        [containerView addSubview:pickerLabel];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [pickerLabel.centerYAnchor constraintEqualToAnchor:containerView.centerYAnchor],
+            [pickerLabel.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor],
+            [pickerLabel.trailingAnchor constraintEqualToAnchor:containerView.trailingAnchor]
+        ]];
+        
+        cell.accessoryView = containerView;
     }
 
     return cell;
@@ -693,33 +726,35 @@ typedef NS_ENUM(NSInteger, DYYYSettingItemType) { DYYYSettingItemTypeSwitch, DYY
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     DYYYSettingItem *item = self.settingSections[indexPath.section][indexPath.row];
-    if (item.type == DYYYSettingItemTypeSpeedPicker) {
-        [self showSpeedPickerForIndexPath:indexPath];
-    } else if (item.type == DYYYSettingItemTypeOptions) {
-        [self showOptionsPickerForIndexPath:indexPath];
+    if (item.type == DYYYSettingItemTypePicker) {
+        [self showUniversalPickerForIndexPath:indexPath];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (void)showSpeedPickerForIndexPath:(NSIndexPath *)indexPath {
+- (void)showUniversalPickerForIndexPath:(NSIndexPath *)indexPath {
     DYYYSettingItem *item = self.settingSections[indexPath.section][indexPath.row];
 
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"选择%@", item.title] message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
-    NSArray *speeds = @[ @0.75, @1.0, @1.25, @1.5, @2.0, @2.5, @3.0 ];
-    for (NSNumber *speed in speeds) {
-        UIAlertAction *action = [UIAlertAction actionWithTitle:[NSString stringWithFormat:@"%.2f", speed.floatValue]
+    NSArray *options = [self optionsForKey:item.key];
+    for (id option in options) {
+        NSString *title = [self displayValueForKey:item.key value:option];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:title
                                                          style:UIAlertActionStyleDefault
                                                        handler:^(UIAlertAction *_Nonnull action) {
                                                          // 保存到对应的key
-                                                         [[NSUserDefaults standardUserDefaults] setFloat:speed.floatValue forKey:item.key];
+                                                         [[NSUserDefaults standardUserDefaults] setObject:option forKey:item.key];
                                                          [[NSUserDefaults standardUserDefaults] synchronize];
 
                                                          // 更新对应的cell显示
                                                          UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                                                         UITextField *speedField = (UITextField *)cell.accessoryView;
-                                                         if (speedField) {
-                                                             speedField.text = [NSString stringWithFormat:@"%.2f", speed.floatValue];
+                                                         UIView *containerView = cell.accessoryView;
+                                                         if (containerView && containerView.subviews.count > 0) {
+                                                             UILabel *pickerLabel = (UILabel *)containerView.subviews.firstObject;
+                                                             if ([pickerLabel isKindOfClass:[UILabel class]]) {
+                                                                 pickerLabel.text = [self displayValueForKey:item.key value:option];
+                                                             }
                                                          }
                                                        }];
         [alert addAction:action];
@@ -735,23 +770,6 @@ typedef NS_ENUM(NSInteger, DYYYSettingItemType) { DYYYSettingItemTypeSwitch, DYY
     }
 
     [self presentViewController:alert animated:YES completion:nil];
-}
-
-- (void)showOptionsPickerForIndexPath:(NSIndexPath *)indexPath {
-    DYYYSettingItem *item = self.settingSections[indexPath.section][indexPath.row];
-    NSArray *options = @[ @"蓝光帧彩", @"蓝光", @"超清", @"高清", @"标清", @"自动" ];
-
-    [DYYYOptionsSelectionView showWithPreferenceKey:item.key
-                                       optionsArray:options
-                                         headerText:[NSString stringWithFormat:@"选择%@", item.title]
-                                     onPresentingVC:self
-                                   selectionChanged:^(NSString *selected) {
-                                     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                                     UILabel *label = (UILabel *)cell.accessoryView;
-                                     if ([label isKindOfClass:[UILabel class]]) {
-                                         label.text = selected;
-                                     }
-                                   }];
 }
 
 #pragma mark - Actions
