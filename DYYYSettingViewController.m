@@ -2,6 +2,8 @@
 #import "DYYYConstants.h"
 #import "DYYYOptionsSelectionView.h"
 
+typedef NS_ENUM(NSInteger, DYYYSettingItemType) { DYYYSettingItemTypeSwitch, DYYYSettingItemTypeTextField, DYYYSettingItemTypeSpeedPicker, DYYYSettingItemTypeOptions };
+
 @interface DYYYSettingItem : NSObject
 
 @property(nonatomic, copy) NSString *title;
