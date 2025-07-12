@@ -163,7 +163,7 @@ static void initTargetClassNames(void) {
 
         // 设置默认状态为半透明
         self.originalAlpha = 1.0; // 交互时为完全不透明
-        self.alpha = 0.7;         // 初始为半透明
+        self.alpha = 0.5;         // 初始为半透明
         // 加载保存的锁定状态
         [self loadLockState];
         [self loadIcons];
@@ -201,7 +201,7 @@ static void initTargetClassNames(void) {
                                                        block:^(NSTimer *timer) {
                                                          [UIView animateWithDuration:0.3
                                                                           animations:^{
-                                                                            self.alpha = 0.7; // 变为半透明
+                                                                            self.alpha = 0.5; // 变为半透明
                                                                           }];
                                                        }];
     // 交互时变为完全不透明
@@ -345,7 +345,7 @@ static void initTargetClassNames(void) {
 }
 
 - (void)restoreAWEPlayInteractionProgressContainerView {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnabshijianjindu"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYHideTimeProgress"]) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYRemoveTimeProgress"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYHideTimeProgress"]) {
         for (UIWindow *window in [UIApplication sharedApplication].windows) {
             [self recursivelyRestoreAWEPlayInteractionProgressContainerViewInView:window];
         }
@@ -354,7 +354,7 @@ static void initTargetClassNames(void) {
 
 - (void)recursivelyRestoreAWEPlayInteractionProgressContainerViewInView:(UIView *)view {
     if ([view isKindOfClass:NSClassFromString(@"AWEPlayInteractionProgressContainerView")]) {
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnabshijianjindu"]) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYRemoveTimeProgress"]) {
             // 如果设置了移除时间进度条，直接显示
             view.hidden = NO;
         } else {
@@ -392,7 +392,7 @@ static void initTargetClassNames(void) {
 }
 
 - (void)hideAWEPlayInteractionProgressContainerView {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnabshijianjindu"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYHideTimeProgress"]) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYRemoveTimeProgress"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYHideTimeProgress"]) {
         for (UIWindow *window in [UIApplication sharedApplication].windows) {
             [self recursivelyHideAWEPlayInteractionProgressContainerViewInView:window];
         }
@@ -401,7 +401,7 @@ static void initTargetClassNames(void) {
 
 - (void)recursivelyHideAWEPlayInteractionProgressContainerViewInView:(UIView *)view {
     if ([view isKindOfClass:NSClassFromString(@"AWEPlayInteractionProgressContainerView")]) {
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEnabshijianjindu"]) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYRemoveTimeProgress"]) {
             // 如果设置了移除时间进度条
             view.hidden = YES;
         } else {
