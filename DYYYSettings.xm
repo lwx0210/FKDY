@@ -96,7 +96,7 @@ void *kViewModelKey = &kViewModelKey;
 
 %hook AWELeftSideBarEntranceView
 - (void)leftSideBarEntranceViewTapped:(UITapGestureRecognizer *)gesture {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYentrance"]) {
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYEntrance"]) {
         %orig;
         return;
     }
@@ -189,7 +189,7 @@ extern "C"
             @"cellType" : @6,
             @"imageName" : @"ic_dansquare_outlined_20"},
           @{
-              @"identifier" : @"DYYYdanmuColor",
+              @"identifier" : @"DYYYDanmuColor",
               @"title" : @"自定弹幕颜色",
               @"subTitle" : @"填入 random 使用随机颜色弹幕",
               @"detail" : @"十六进制",
@@ -220,7 +220,7 @@ extern "C"
 		          @"detail" : @"16进制,只填后6位即可,不填默认",
 		          @"cellType" : @20,
 		          @"imageName" : @"ic_tv_outlined_20"},
-			    @{@"identifier" : @"DYYYisShowScheduleDisplay",
+			    @{@"identifier" : @"DYYYShowScheduleDisplay",
 			      @"title" : @"显示进度时长",
 			      @"detail" : @"",
 			      @"cellType" : @6,
@@ -245,7 +245,7 @@ extern "C"
 			      @"detail" : @"",
 			      @"cellType" : @6,
 			      @"imageName" : @"ic_playertime_outlined_20"},
-			    @{@"identifier" : @"DYYYisEnableAutoPlay",
+			    @{@"identifier" : @"DYYYEnableAutoPlay",
 			      @"title" : @"启用自动播放",
                   @"subTitle" : @"暂时仅支持首页.搜索和个人主页的连播",
 			      @"detail" : @"",
@@ -261,7 +261,7 @@ extern "C"
 		          @"detail" : @"",
 		          @"cellType" : @26,
 		          @"imageName" : @"ic_speed_outlined_20"},
-			    @{@"identifier" : @"DYYYisEnableArea",
+			    @{@"identifier" : @"DYYYEnableArea",
 			      @"title" : @"属地时间显示",
 			      @"detail" : @"",
 			      @"cellType" : @6,
@@ -278,7 +278,7 @@ extern "C"
 		          @"detail" : @"16进制,只填后6位即可,不填默认",
 		          @"cellType" : @20,
 		          @"imageName" : @"ic_location_outlined_20"},
-			    @{@"identifier" : @"DYYYEnabsuijiyanse",
+			    @{@"identifier" : @"DYYYEnableRandomGradient",
 			      @"title" : @"属地颜色随机",
                   @"subTitle" : @"启用后会覆盖时间颜色",
 			      @"detail" : @"",
@@ -358,18 +358,18 @@ extern "C"
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_squaretriangletwo_outlined_20"},
-          @{@"identifier" : @"DYYYisHideStatusbar",
+          @{@"identifier" : @"DYYYHideStatusbar",
             @"title" : @"隐藏系统顶栏",
             @"subTitle" : @"隐藏系统状态栏",
             @"detail" : @"",
             @"cellType" : @37,
             @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{@"identifier" : @"DYYYisEnablePure",
+          @{@"identifier" : @"DYYYEnablePure",
             @"title" : @"启用首页净化",
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_broom_outlined"},
-          @{@"identifier" : @"DYYYisEnableFullScreen",
+          @{@"identifier" : @"DYYYEnableFullScreen",
             @"title" : @"启用首页全屏",
             @"detail" : @"",
             @"cellType" : @6,
@@ -401,43 +401,43 @@ extern "C"
       // 【过滤与屏蔽】分类
       NSMutableArray<AWESettingItemModel *> *filterItems = [NSMutableArray array];
       NSArray *filterSettings = @[
-          @{@"identifier" : @"DYYYisSkipLive",
+          @{@"identifier" : @"DYYYSkipLive",
             @"title" : @"推荐过滤直播",
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_video_outlined_20"},
-          @{@"identifier" : @"DYYYisSkipHotSpot",
+          @{@"identifier" : @"DYYYSkipHotSpot",
             @"title" : @"推荐过滤热点",
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_squaretriangletwo_outlined_20"},
-          @{@"identifier" : @"DYYYfilterLowLikes",
+          @{@"identifier" : @"DYYYFilterLowLikes",
             @"title" : @"推荐过滤低赞",
             @"detail" : @"0",
             @"cellType" : @26,
             @"imageName" : @"ic_thumbsdown_outlined_20"},
-          @{@"identifier" : @"DYYYfilterUsers",
-            @"title" : @"推荐过滤用户",
+          @{@"identifier" : @"DYYYFilterUsers",
+            @"title" : @"推荐过滤作者",
             @"detail" : @"",
             @"cellType" : @26,
             @"imageName" : @"ic_userban_outlined_20"},
-          @{@"identifier" : @"DYYYfilterKeywords",
+          @{@"identifier" : @"DYYYFilterKeywords",
             @"title" : @"推荐过滤文案",
             @"detail" : @"",
             @"cellType" : @26,
             @"imageName" : @"ic_tag_outlined_20"},
-          @{@"identifier" : @"DYYYfiltertimelimit",
+          @{@"identifier" : @"DYYYFilterTimeLimit",
             @"title" : @"推荐视频时限",
             @"detail" : @"",
             @"cellType" : @26,
             @"imageName" : @"ic_playertime_outlined_20"},
-          @{@"identifier" : @"DYYYfilterFeedHDR",
+          @{@"identifier" : @"DYYYFilterFeedHDR",
             @"title" : @"推荐过滤HDR",
             @"subTitle" : @"开启后推荐流会屏蔽 HDR 视频",
             @"detail" : @"",
             @"cellType" : @37,
             @"imageName" : @"ic_sun_outlined"},
-          @{@"identifier" : @"DYYYfilterProp",
+          @{@"identifier" : @"DYYYFilterProp",
             @"title" : @"推荐过滤拍同款",
             @"detail" : @"",
             @"cellType" : @26,
@@ -468,8 +468,8 @@ extern "C"
       for (NSDictionary *dict in filterSettings) {
           AWESettingItemModel *item = [DYYYSettingsHelper createSettingItem:dict cellTapHandlers:cellTapHandlers];
 
-          if ([item.identifier isEqualToString:@"DYYYfilterLowLikes"]) {
-              NSString *savedValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYfilterLowLikes"];
+              if ([item.identifier isEqualToString:@"DYYYFilterLowLikes"]) {
+              NSString *savedValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYFilterLowLikes"];
               item.detail = savedValue ?: @"0";
               item.cellTappedBlock = ^{
                 [DYYYSettingsHelper showTextInputAlert:@"设置过滤赞数阈值"
@@ -484,7 +484,7 @@ extern "C"
                                                    if (value < 0)
                                                        value = 0;
                                                    NSString *valueString = [NSString stringWithFormat:@"%ld", (long)value];
-                                                   [DYYYSettingsHelper setUserDefaults:valueString forKey:@"DYYYfilterLowLikes"];
+                                                   [DYYYSettingsHelper setUserDefaults:valueString forKey:@"DYYYFilterLowLikes"];
 
                                                    item.detail = valueString;
                                                    [item refreshCell];
@@ -495,41 +495,42 @@ extern "C"
                                              }
                                               onCancel:nil];
               };
-          } else if ([item.identifier isEqualToString:@"DYYYfilterUsers"]) {
-              NSString *savedValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYfilterUsers"];
+    } else if ([item.identifier isEqualToString:@"DYYYFilterUsers"]) {
+              NSString *savedValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYFilterUsers"];
               item.detail = savedValue ?: @"";
               item.cellTappedBlock = ^{
                 // 将保存的逗号分隔字符串转换为数组
-                NSString *savedKeywords = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYfilterUsers"] ?: @"";
+                NSString *savedKeywords = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYFilterUsers"] ?: @"";
                 NSArray *keywordArray = [savedKeywords length] > 0 ? [savedKeywords componentsSeparatedByString:@","] : @[];
                 DYYYKeywordListView *keywordListView = [[DYYYKeywordListView alloc] initWithTitle:@"已过滤的视频作者" keywords:keywordArray];
                 keywordListView.onConfirm = ^(NSArray *keywords) {
                   NSString *keywordString = [keywords componentsJoinedByString:@","];
-                  [DYYYSettingsHelper setUserDefaults:keywordString forKey:@"DYYYfilterUsers"];
+                  [DYYYSettingsHelper setUserDefaults:keywordString forKey:@"DYYYFilterUsers"];
                   item.detail = keywordString;
                   [item refreshCell];
                 };
 
                 [keywordListView show];
               };
-          } else if ([item.identifier isEqualToString:@"DYYYfilterKeywords"]) {
-              NSString *savedValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYfilterKeywords"];
+         } else if ([item.identifier isEqualToString:@"DYYYFilterKeywords"]) {
+              NSString *savedValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYFilterKeywords"];
+
               item.detail = savedValue ?: @"";
               item.cellTappedBlock = ^{
-                NSString *savedKeywords = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYfilterKeywords"] ?: @"";
+                   NSString *savedKeywords = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYFilterKeywords"] ?: @"";
                 NSArray *keywordArray = [savedKeywords length] > 0 ? [savedKeywords componentsSeparatedByString:@","] : @[];
                 DYYYKeywordListView *keywordListView = [[DYYYKeywordListView alloc] initWithTitle:@"已过滤的视频文案" keywords:keywordArray];
                 keywordListView.onConfirm = ^(NSArray *keywords) {
                   NSString *keywordString = [keywords componentsJoinedByString:@","];
 
-                  [DYYYSettingsHelper setUserDefaults:keywordString forKey:@"DYYYfilterKeywords"];
+                    [DYYYSettingsHelper setUserDefaults:keywordString forKey:@"DYYYFilterKeywords"];
                   item.detail = keywordString;
                   [item refreshCell];
                 };
                 [keywordListView show];
               };
-          } else if ([item.identifier isEqualToString:@"DYYYfiltertimelimit"]) {
-              NSString *savedValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYfiltertimelimit"];
+    } else if ([item.identifier isEqualToString:@"DYYYFilterTimeLimit"]) {
+              NSString *savedValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYFilterTimeLimit"];
               item.detail = savedValue ?: @"";
               item.cellTappedBlock = ^{
                 [DYYYSettingsHelper showTextInputAlert:@"过滤视频的发布时间"
@@ -537,23 +538,23 @@ extern "C"
                                            placeholder:@"单位为天"
                                              onConfirm:^(NSString *text) {
                                                NSString *trimmedText = [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                                               [DYYYSettingsHelper setUserDefaults:trimmedText forKey:@"DYYYfiltertimelimit"];
+                                               [DYYYSettingsHelper setUserDefaults:trimmedText forKey:@"DYYYFilterTimeLimit"];
                                                item.detail = trimmedText ?: @"";
                                                [item refreshCell];
                                              }
                                               onCancel:nil];
               };
-          } else if ([item.identifier isEqualToString:@"DYYYfilterProp"]) {
-              NSString *savedValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYfilterProp"];
+          } else if ([item.identifier isEqualToString:@"DYYYFilterProp"]) {
+              NSString *savedValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYFilterProp"];
               item.detail = savedValue ?: @"";
               item.cellTappedBlock = ^{
-                NSString *savedKeywords = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYfilterProp"] ?: @"";
+                NSString *savedKeywords = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYFilterProp"] ?: @"";
                 NSArray *keywordArray = [savedKeywords length] > 0 ? [savedKeywords componentsSeparatedByString:@","] : @[];
                 DYYYKeywordListView *keywordListView = [[DYYYKeywordListView alloc] initWithTitle:@"设置过滤词（支持部分匹配）" keywords:keywordArray];
                 keywordListView.onConfirm = ^(NSArray *keywords) {
                   NSString *keywordString = [keywords componentsJoinedByString:@","];
 
-                  [DYYYSettingsHelper setUserDefaults:keywordString forKey:@"DYYYfilterProp"];
+                 [DYYYSettingsHelper setUserDefaults:keywordString forKey:@"DYYYFilterProp"];
                   item.detail = keywordString;
                   [item refreshCell];
                 };
@@ -566,12 +567,12 @@ extern "C"
       // 【二次确认】分类
       NSMutableArray<AWESettingItemModel *> *securityItems = [NSMutableArray array];
       NSArray *securitySettings = @[
-          @{@"identifier" : @"DYYYfollowTips",
+          @{@"identifier" : @"DYYYFollowTips",
             @"title" : @"关注二次确认",
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_userplus_outlined_20"},
-          @{@"identifier" : @"DYYYcollectTips",
+          @{@"identifier" : @"DYYYCollectTips",
             @"title" : @"收藏二次确认",
             @"detail" : @"",
             @"cellType" : @6,
@@ -613,7 +614,7 @@ extern "C"
       // 【透明度设置】分类
       NSMutableArray<AWESettingItemModel *> *transparencyItems = [NSMutableArray array];
       NSArray *transparencySettings = @[
-          @{@"identifier" : @"DYYYtopbartransparent",
+          @{@"identifier" : @"DYYYTopBarTransparent",
             @"title" : @"设置顶栏透明",
             @"detail" : @"0-1小数",
             @"cellType" : @26,
@@ -628,7 +629,7 @@ extern "C"
             @"detail" : @"0-1小数",
             @"cellType" : @26,
             @"imageName" : @"ic_user_outlined_20"},
-          @{@"identifier" : @"DYYYisEnableCommentBlur",
+          @{@"identifier" : @"DYYYEnableCommentBlur",
             @"title" : @"评论区毛玻璃",
             @"detail" : @"",
             @"cellType" : @6,
@@ -842,14 +843,14 @@ extern "C"
       NSMutableArray<AWESettingItemModel *> *mainUiItems = [NSMutableArray array];
       NSArray *mainUiSettings = @[
           @{
-              @"identifier" : @"DYYYisHiddenBottomBg",
+              @"identifier" : @"DYYYHideBottomBg",
               @"title" : @"隐藏底栏背景",
               @"subTitle" : @"完全透明化底栏，可能需要配合首页全屏使用",
               @"detail" : @"",
               @"cellType" : @37,
               @"imageName" : @"ic_eyeslash_outlined_16"
           },
-          @{@"identifier" : @"DYYYisHiddenBottomDot",
+          @{@"identifier" : @"DYYYHideBottomDot",
             @"title" : @"隐藏底栏红点",
             @"detail" : @"",
             @"cellType" : @6,
@@ -877,7 +878,7 @@ extern "C"
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{@"identifier" : @"DYYYisHiddenJia",
+          @{@"identifier" : @"DYYYHidePlusButton",
             @"title" : @"隐藏底栏加号",
             @"detail" : @"",
             @"cellType" : @6,
@@ -974,7 +975,7 @@ extern "C"
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{@"identifier" : @"DYYYisHiddenEntry",
+          @{@"identifier" : @"DYYYHideEntry",
             @"title" : @"隐藏全屏观看",
             @"detail" : @"",
             @"cellType" : @6,
@@ -997,17 +998,17 @@ extern "C"
       // 【侧边栏】分类
       NSMutableArray<AWESettingItemModel *> *sidebarItems = [NSMutableArray array];
       NSArray *sidebarSettings = @[
-          @{@"identifier" : @"DYYYStreamlinethesidebar",
+          @{@"identifier" : @"DYYYHideSidebarElements",
             @"title" : @"隐藏侧栏元素",
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{@"identifier" : @"DYYYisHiddenSidebarDot",
+          @{@"identifier" : @"DYYYHideSidebarDot",
             @"title" : @"隐藏侧栏红点",
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{@"identifier" : @"DYYYisHiddenLeftSideBar",
+          @{@"identifier" : @"DYYYHideLeftSideBar",
             @"title" : @"隐藏左侧边栏",
             @"detail" : @"",
             @"cellType" : @6,
@@ -1038,12 +1039,12 @@ extern "C"
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{@"identifier" : @"DYYYisHiddenAvatarList",
+          @{@"identifier" : @"DYYYHideAvatarList",
             @"title" : @"隐藏消息头像列表",
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{@"identifier" : @"DYYYisHiddenAvatarBubble",
+          @{@"identifier" : @"DYYYHideAvatarBubble",
             @"title" : @"隐藏消息头像气泡",
             @"detail" : @"",
             @"cellType" : @6,
@@ -1063,7 +1064,7 @@ extern "C"
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{@"identifier" : @"DYYYGroupLiving",
+          @{@"identifier" : @"DYYYHideGroupLiveIndicator",
             @"title" : @"隐藏群头像直播中",
             @"detail" : @"",
             @"cellType" : @6,
@@ -1087,7 +1088,7 @@ extern "C"
       // 【提示与位置信息】分类
       NSMutableArray<AWESettingItemModel *> *infoItems = [NSMutableArray array];
       NSArray *infoSettings = @[
-          @{@"identifier" : @"DYYYHidenLiveView",
+         @{@"identifier" : @"DYYYHideLiveView",
             @"title" : @"隐藏关注顶端",
             @"subTitle" : @"隐藏关注页顶端的直播列表",
             @"detail" : @"",
@@ -1222,7 +1223,7 @@ extern "C"
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{@"identifier" : @"DYYYHidentopbarprompt",
+          @{@"identifier" : @"DYYYHideTopBarLine",
             @"title" : @"隐藏顶栏横线",
             @"detail" : @"",
             @"cellType" : @6,
@@ -1300,7 +1301,7 @@ extern "C"
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{@"identifier" : @"DYYYHideRightLable",
+          @{@"identifier" : @"DYYYHideRightLabel",
             @"title" : @"隐藏昵称右侧",
             @"detail" : @"",
             @"cellType" : @6,
@@ -1332,7 +1333,7 @@ extern "C"
             @"cellType" : @6,
             @"imageName" : @"ic_eyeslash_outlined_16"},
           @{
-              @"identifier" : @"DYYYHidekeyboardai",
+              @"identifier" : @"DYYYHideKeyboardAI",
               @"title" : @"隐藏键盘 AI",
               @"subTitle" : @"隐藏搜索下方的 AI 和语音搜索按钮",
               @"detail" : @"",
@@ -1872,7 +1873,7 @@ extern "C"
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_hamburgernut_outlined_20"},
-          @{@"identifier" : @"DYYYisEnableSheetBlur",
+          @{@"identifier" : @"DYYYEnableSheetBlur",
             @"title" : @"保存面板玻璃效果",
             @"detail" : @"",
             @"cellType" : @6,
@@ -1895,7 +1896,7 @@ extern "C"
           @{
               @"identifier" : @"DYYYForceDownloadEmotion",
               @"title" : @"保存评论区表情包",
-              @"subTitle" : @"iOS 17+ 需长按表情保存",
+              @"subTitle" : @"iOS 17+的用户请长按表情本身保存",
               @"detail" : @"",
               @"cellType" : @37,
               @"imageName" : @"ic_emoji_outlined"
@@ -2512,7 +2513,7 @@ extern "C"
       NSMutableArray<AWESettingItemModel *> *interactionItems = [NSMutableArray array];
       NSArray *interactionSettings = @[
           @{
-              @"identifier" : @"DYYYentrance",
+              @"identifier" : @"DYYYEntrance",
               @"title" : @"左侧边栏快捷入口",
               @"subTitle" : @"将侧边栏替换为 DYYY 快捷入口",
               @"detail" : @"",
@@ -2580,25 +2581,25 @@ extern "C"
               @"cellType" : @37,
               @"imageName" : @"ic_quaver_outlined_20"
           },
-          @{@"identifier" : @"DYYYisAutoSelectOriginalPhoto",
+          @{@"identifier" : @"DYYYAutoSelectOriginalPhoto",
             @"title" : @"启用自动勾选原图",
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_image_outlined_20"},
           @{
-              @"identifier" : @"DYYYisEnableModernPanel",
+              @"identifier" : @"DYYYEnableModernPanel",
               @"title" : @"启用新版长按面板",
               @"subTitle" : @"启用抖音灰度测试的新版长按面板",
               @"detail" : @"",
               @"cellType" : @37,
               @"imageName" : @"ic_squaresplit_outlined_20"
           },
-          @{@"identifier" : @"DYYYisLongPressPanelBlur",
+          @{@"identifier" : @"DYYYLongPressPanelBlur",
             @"title" : @"长按面板玻璃效果",
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_squaresplit_outlined_20"},
-          @{@"identifier" : @"DYYYisLongPressPanelDark",
+          @{@"identifier" : @"DYYYLongPressPanelDark",
             @"title" : @"长按面板深色模式",
             @"detail" : @"",
             @"cellType" : @6,
@@ -2616,7 +2617,7 @@ extern "C"
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_arrowcircle_outlined_20"},
-          @{@"identifier" : @"DYYYDouble",
+          @{@"identifier" : @"DYYYDisableDoubleTapLike",
             @"title" : @"禁用双击视频点赞",
             @"detail" : @"",
             @"cellType" : @6,
@@ -2723,7 +2724,7 @@ extern "C"
               };
           }
 
-          if ([item.identifier isEqualToString:@"DYYYisLongPressPanelDark"]) {
+         if ([item.identifier isEqualToString:@"DYYYLongPressPanelDark"]) {
               BOOL isDarkPanelEnabled = [DYYYSettingsHelper getUserDefaults:item.identifier];
               item.svgIconImageName = isDarkPanelEnabled ? @"ic_moon_outlined" : @"ic_sun_outlined";
 
@@ -2958,7 +2959,7 @@ extern "C"
       [clearButtonItems addObject:hideDanmakuButton];
 
       AWESettingItemModel *enableqingButton = [DYYYSettingsHelper createSettingItem:@{
-          @"identifier" : @"DYYYEnabshijianjindu",
+          @"identifier" : @"DYYYRemoveTimeProgress",
           @"title" : @"清屏移除时间进度",
           @"subTitle" : @"清屏状态下完全移除时间进度条",
           @"detail" : @"",
