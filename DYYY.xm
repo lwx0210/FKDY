@@ -1296,7 +1296,7 @@ static CGFloat rightLabelRightMargin = -1;
                                           }];
                 }
             } else if (![originalText containsString:cityName]) {
-                BOOL isDirectCity = [provinceName isEqualToString:cityName] || ([cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"]);
+                BOOL isDirectCity = [provinceName isEqualToString:cityName] || ([cityCode hasPrefix:@"11"] || [cityCode hasPrefix:@"12"] || [cityCode hasPrefix:@"31"] || [cityCode hasPrefix:@"50"]);
                 if (!self.model.ipAttribution) {
                     if (isDirectCity) {
                         label.text = [NSString stringWithFormat:@"%@  IP属地：%@", originalText, cityName];
@@ -1583,6 +1583,30 @@ static NSString *const kDYYYLongPressCopyEnabledKey = @"DYYYLongPressCopyTextEna
     }
 }
 
+%end
+
+%hook AWENormalModeTabBarGeneralPlusButton
+- (void)setImage:(UIImage *)image forState:(UIControlState)state {
+
+    if ([self.accessibilityLabel isEqualToString:@"拍摄"]) {
+
+        NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+        NSString *dyyyFolderPath = [documentsPath stringByAppendingPathComponent:@"DYYY"];
+
+        NSString *customImagePath = [dyyyFolderPath stringByAppendingPathComponent:@"tab_plus.png"];
+
+        if ([[NSFileManager defaultManager] fileExistsAtPath:customImagePath]) {
+            UIImage *customImage = [UIImage imageWithContentsOfFile:customImagePath];
+            if (customImage) {
+
+                %orig(customImage, state);
+                return;
+            }
+        }
+    }
+
+    %orig;
+}
 %end
 
 // 获取资源的地址
@@ -3041,11 +3065,20 @@ static AWEIMReusableCommonCell *currentCell;
     %orig;
 
     if (DYYYGetBool(@"DYYYHideSearchBubble")) {
-        self.hidden = YES;
+        [self removeFromSuperview];
         return;
     }
 }
 
+%end
+
+%hook AWEFeedLiveTabTopSelectionView
+- (void)setHideTimer:(id)timer {
+    if (DYYYGetBool(@"DYYYDisableAutoHideLive")) {
+        timer = nil;
+    }
+    %orig(timer);
+}
 %end
 
 %hook AWEMusicCoverButton
@@ -4485,6 +4518,15 @@ static AWEIMReusableCommonCell *currentCell;
         text = customText;
     }
     %orig(text);
+}
+%end
+
+%hook AWEAwemeStatusModel
+- (void)setListenVideoStatus:(NSInteger)status {
+    if (status == 1 && DYYYGetBool(@"DYYYEnableBackgroundListen")) {
+        status = 2;
+    }
+    %orig(status);
 }
 %end
 
