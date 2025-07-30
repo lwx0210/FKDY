@@ -1296,7 +1296,7 @@ static CGFloat rightLabelRightMargin = -1;
                                           }];
                 }
             } else if (![originalText containsString:cityName]) {
-                BOOL isDirectCity = [provinceName isEqualToString:cityName] || ([cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"]);
+                BOOL isDirectCity = [provinceName isEqualToString:cityName] || ([cityCode hasPrefix:@"11"] || [cityCode hasPrefix:@"12"] || [cityCode hasPrefix:@"31"] || [cityCode hasPrefix:@"50"]);
                 if (!self.model.ipAttribution) {
                     if (isDirectCity) {
                         label.text = [NSString stringWithFormat:@"%@  IP属地：%@", originalText, cityName];
@@ -3141,7 +3141,12 @@ static AWEIMReusableCommonCell *currentCell;
 - (void)layoutSubviews {
     if (DYYYGetBool(@"DYYYHideGradient")) {
         UIView *parent = self.superview;
-        if ([parent.accessibilityLabel isEqualToString:@"暂停，按钮"] || [parent.accessibilityLabel isEqualToString:@"播放，按钮"] || [parent.accessibilityLabel isEqualToString:@"“切换视角，按钮"]) {
+        if (
+            [parent.accessibilityLabel isEqualToString:@"暂停，按钮"] || 
+            [parent.accessibilityLabel isEqualToString:@"播放，按钮"] || 
+            [parent.accessibilityLabel isEqualToString:@"“切换视角，按钮"] ||
+            [parent isKindOfClass:%c(AWEStoryProgressContainerView)]
+        ) {
             self.hidden = YES;
         }
         return;
@@ -3248,6 +3253,21 @@ static AWEIMReusableCommonCell *currentCell;
     } else {
         if (class_getInstanceMethod([self class], @selector(prefersStatusBarHidden)) !=
             class_getInstanceMethod([%c(AWEFullPageFeedNewContainerViewController) class], @selector(prefersStatusBarHidden))) {
+            return %orig;
+        }
+        return NO;
+    }
+}
+%end
+
+// 纯净模式状态栏
+%hook AFDPureModePageContainerViewController
+- (BOOL)prefersStatusBarHidden {
+    if (DYYYGetBool(@"DYYYHideStatusbar")) {
+        return YES;
+    } else {
+        if (class_getInstanceMethod([self class], @selector(prefersStatusBarHidden)) !=
+            class_getInstanceMethod([%c(AFDPureModePageContainerViewController) class], @selector(prefersStatusBarHidden))) {
             return %orig;
         }
         return NO;
@@ -3569,20 +3589,6 @@ static AWEIMReusableCommonCell *currentCell;
 }
 %end
 
-// 隐藏图片滑条
-%hook AWEStoryProgressContainerView
-- (BOOL)isHidden {
-    BOOL originalValue = %orig;
-    BOOL customHide = DYYYGetBool(@"DYYYHideDotsIndicator");
-    return originalValue || customHide;
-}
-
-- (void)setHidden:(BOOL)hidden {
-    BOOL forceHide = DYYYGetBool(@"DYYYHideDotsIndicator");
-    %orig(forceHide ? YES : hidden);
-}
-%end
-
 // 隐藏昵称右侧
 %hook UILabel
 - (void)layoutSubviews {
@@ -3661,6 +3667,19 @@ static AWEIMReusableCommonCell *currentCell;
         }
     }
 }
+%end
+
+%hook AWEProfilePostEmptyPublishGuideCollectionViewCell
+
+- (void)didMoveToSuperview {
+    %orig;
+    if (DYYYGetBool(@"DYYYHidePostView")) {
+    if ([(UIView *)self superview]) {
+        [(UIView *)self setHidden:YES];
+    }
+}
+}
+
 %end
 
 %hook AWEProfileTaskCardStyleListCollectionViewCell
@@ -5141,6 +5160,7 @@ static CGFloat originalTabHeight = 0;
     Class generalButtonClass = %c(AWENormalModeTabBarGeneralButton);
     Class plusButtonClass = %c(AWENormalModeTabBarGeneralPlusButton);
     Class tabBarButtonClass = %c(UITabBarButton);
+    Class barBackgroundClass = NSClassFromString(@"_UIBarBackground");
 
     for (UIView *subview in self.subviews) {
         if ([subview isKindOfClass:generalButtonClass] || [subview isKindOfClass:plusButtonClass]) {
@@ -5164,6 +5184,8 @@ static CGFloat originalTabHeight = 0;
             [buttonsToRemove addObject:subview];
         } else if (isPad && ipadContainerView == nil && [subview class] == [UIView class] && fabs(subview.frame.size.width - self.bounds.size.width) > 0.1) {
             ipadContainerView = subview;
+        } else if (DYYYGetBool(@"DYYYEnableFullScreen") && ![subview isKindOfClass:barBackgroundClass]) {
+            [buttonsToRemove addObject:subview];
         }
     }
 
@@ -6607,6 +6629,28 @@ static Class TagViewClass = nil;
     for (UIView *view in bgViews) {
         view.backgroundColor = [UIColor clearColor];
     }
+}
+%end
+
+// 隐藏图片滑条
+%hook AWEStoryProgressContainerView
+- (void)setCenter:(CGPoint)center {
+    UIViewController *vc = [DYYYUtils firstAvailableViewControllerFromView:self];
+    if ([vc isKindOfClass:NSClassFromString(@"AWEFeedPlayControlImpl.PureModePageCellViewController")] && DYYYGetBool(@"DYYYEnableFullScreen")) {
+        center.y -= tabHeight;
+    }
+    %orig(center);
+}
+
+- (BOOL)isHidden {
+    BOOL originalValue = %orig;
+    BOOL customHide = DYYYGetBool(@"DYYYHideDotsIndicator");
+    return originalValue || customHide;
+}
+
+- (void)setHidden:(BOOL)hidden {
+    BOOL forceHide = DYYYGetBool(@"DYYYHideDotsIndicator");
+    %orig(forceHide ? YES : hidden);
 }
 %end
 
