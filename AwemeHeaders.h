@@ -1116,6 +1116,9 @@ static CGFloat gStartVal = 0.0;
 @interface AWEFullPageFeedNewContainerViewController : UIViewController
 - (BOOL)prefersStatusBarHidden;
 @end
+@interface AFDPureModePageContainerViewController : UIViewController
+- (BOOL)prefersStatusBarHidden;
+@end
 
 @interface AWEFeedUnfollowFamiliarFollowAndDislikeView : UIView
 @end
