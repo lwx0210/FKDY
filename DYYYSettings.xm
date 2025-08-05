@@ -953,6 +953,18 @@ extern "C"
       // 【视频播放界面】分类
       NSMutableArray<AWESettingItemModel *> *videoUiItems = [NSMutableArray array];
       NSArray *videoUiSettings = @[
+         @{@"identifier" : @"DYYYHideEntry",
+            @"title" : @"隐藏全屏观看",
+            @"subTitle" : @"原始位置可点击",
+            @"detail" : @"",
+            @"cellType" : @37,
+            @"imageName" : @"ic_eyeslash_outlined_16"},
+          @{@"identifier" : @"DYYYRemoveEntry",
+            @"title" : @"移除全屏观看",
+            @"subTitle" : @"完全移除不可点击",
+            @"detail" : @"",
+            @"cellType" : @37,
+            @"imageName" : @"ic_eyeslash_outlined_16"},
           @{@"identifier" : @"DYYYHideLOTAnimationView",
             @"title" : @"隐藏头像加号",
             @"subTitle" : @"原始位置可点击",
@@ -1015,13 +1027,7 @@ extern "C"
             @"detail" : @"",
             @"cellType" : @6,
             @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{@"identifier" : @"DYYYHideEntry",
-            @"title" : @"隐藏全屏观看",
-            @"detail" : @"",
-            @"cellType" : @6,
-            @"imageName" : @"ic_eyeslash_outlined_16"},
-          @{
-              @"identifier" : @"DYYYHideGradient",
+          @{@"identifier" : @"DYYYHideGradient",
               @"title" : @"隐藏遮罩效果",
               @"subTitle" : @"优化视频文案展开时出现的黑色背景遮罩效果，但可能对部分视频的文案可读性产生一定影响。",
               @"detail" : @"",
