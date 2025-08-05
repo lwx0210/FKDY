@@ -138,7 +138,7 @@ void initTargetClassNames(void) {
         self.hiddenViewsList = [NSMutableArray array];
 
         self.originalAlpha = 1.0;
-        self.alpha = 0.5;
+        self.alpha = 0.7;
         
         [self loadLockState];
         [self loadIcons];
@@ -189,7 +189,7 @@ void initTargetClassNames(void) {
                                                        block:^(NSTimer *timer) {
                                                            [UIView animateWithDuration:0.3
                                                                             animations:^{
-                                                                                self.alpha = 0.5;
+                                                                                self.alpha = 0.7;
                                                                             }];
                                                        }];
     if (self.alpha != self.originalAlpha) {
