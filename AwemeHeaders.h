@@ -1357,6 +1357,9 @@ static CGFloat gStartVal = 0.0;
 - (NSString *)businessId;
 @end
 
+@interface AWEListKitMagicCollectionView : UICollectionView
+@end
+
 //修改id附加起始位 
 @interface AWEUserHomeAccessibilityViewV2 : UIView
 - (void)findAndModifyDouyinLabelInView:(UIView *)view;
