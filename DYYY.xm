@@ -535,10 +535,6 @@
 %end
 
 %hook AWEFeedTopBarContainer
-- (void)didMoveToSuperview {
-    %orig;
-    applyTopBarTransparency(self);
-}
 - (void)setAlpha:(CGFloat)alpha {
     NSString *transparentValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYTopBarTransparent"];
     if (transparentValue && transparentValue.length > 0) {
@@ -1267,7 +1263,7 @@ static CGFloat rightLabelRightMargin = -1;
                                           }];
                 }
             } else if (![originalText containsString:cityName]) {
-                BOOL isDirectCity = [provinceName isEqualToString:cityName] || ([cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"]);
+                BOOL isDirectCity = [provinceName isEqualToString:cityName] || ([cityCode hasPrefix:@"11"] || [cityCode hasPrefix:@"12"] || [cityCode hasPrefix:@"31"] || [cityCode hasPrefix:@"50"]);
                 if (!self.model.ipAttribution) {
                     if (isDirectCity) {
                         label.text = [NSString stringWithFormat:@"%@  IP属地：%@", originalText, cityName];
@@ -1651,49 +1647,51 @@ static NSString *const kDYYYLongPressCopyEnabledKey = @"DYYYLongPressCopyTextEna
 
 %new
 - (void)applyBlurEffectToView:(UIView *)containerView {
-    if (!containerView) {
-        return;
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+      if (!containerView) {
+          return;
+      }
 
-    containerView.backgroundColor = [UIColor clearColor];
+      containerView.backgroundColor = [UIColor clearColor];
 
-    float userRadius = [[[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYNotificationCornerRadius"] floatValue];
-    if (!userRadius || userRadius < 0 || userRadius > 50) {
-        userRadius = 12;
-    }
+      float userRadius = [[[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYNotificationCornerRadius"] floatValue];
+      if (!userRadius || userRadius < 0 || userRadius > 50) {
+          userRadius = 12;
+      }
 
-    containerView.layer.cornerRadius = userRadius;
-    containerView.layer.masksToBounds = YES;
+      containerView.layer.cornerRadius = userRadius;
+      containerView.layer.masksToBounds = YES;
 
-    for (UIView *subview in containerView.subviews) {
-        if ([subview isKindOfClass:[UIVisualEffectView class]] && subview.tag == 999) {
-            [subview removeFromSuperview];
-        }
-    }
+      for (UIView *subview in containerView.subviews) {
+          if ([subview isKindOfClass:[UIVisualEffectView class]] && subview.tag == 999) {
+              [subview removeFromSuperview];
+          }
+      }
 
-    BOOL isDarkMode = [DYYYUtils isDarkMode];
-    UIBlurEffectStyle blurStyle = isDarkMode ? UIBlurEffectStyleDark : UIBlurEffectStyleLight;
-    UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:blurStyle];
-    UIVisualEffectView *blurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+      BOOL isDarkMode = [DYYYUtils isDarkMode];
+      UIBlurEffectStyle blurStyle = isDarkMode ? UIBlurEffectStyleDark : UIBlurEffectStyleLight;
+      UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:blurStyle];
+      UIVisualEffectView *blurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
 
-    blurView.frame = containerView.bounds;
-    blurView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    blurView.tag = 999;
-    blurView.layer.cornerRadius = userRadius;
-    blurView.layer.masksToBounds = YES;
+      blurView.frame = containerView.bounds;
+      blurView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+      blurView.tag = 999;
+      blurView.layer.cornerRadius = userRadius;
+      blurView.layer.masksToBounds = YES;
 
-    float userTransparency = [[[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYCommentBlurTransparent"] floatValue];
-    if (userTransparency <= 0 || userTransparency > 1) {
-        userTransparency = 0.5;
-    }
+      float userTransparency = [[[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYCommentBlurTransparent"] floatValue];
+      if (userTransparency <= 0 || userTransparency > 1) {
+          userTransparency = 0.5;
+      }
 
-    blurView.alpha = userTransparency;
+      blurView.alpha = userTransparency;
 
-    [containerView insertSubview:blurView atIndex:0];
+      [containerView insertSubview:blurView atIndex:0];
 
-    [self clearBackgroundRecursivelyInView:containerView];
+      [self clearBackgroundRecursivelyInView:containerView];
 
-    [self setLabelsColorWhiteInView:containerView];
+      [self setLabelsColorWhiteInView:containerView];
+    });
 }
 
 %new
@@ -3112,12 +3110,8 @@ static AWEIMReusableCommonCell *currentCell;
 - (void)layoutSubviews {
     if (DYYYGetBool(@"DYYYHideGradient")) {
         UIView *parent = self.superview;
-        if (
-            [parent.accessibilityLabel isEqualToString:@"暂停，按钮"] || 
-            [parent.accessibilityLabel isEqualToString:@"播放，按钮"] || 
-            [parent.accessibilityLabel isEqualToString:@"“切换视角，按钮"] ||
-            [parent isKindOfClass:%c(AWEStoryProgressContainerView)]
-        ) {
+        if ([parent.accessibilityLabel isEqualToString:@"暂停，按钮"] || [parent.accessibilityLabel isEqualToString:@"播放，按钮"] || [parent.accessibilityLabel isEqualToString:@"“切换视角，按钮"] ||
+            [parent isKindOfClass:%c(AWEStoryProgressContainerView)]) {
             self.hidden = YES;
         }
         return;
@@ -3247,6 +3241,32 @@ static AWEIMReusableCommonCell *currentCell;
 %end
 
 // 隐藏昵称上方元素
+%hook AWEFeedAnchorContainerView
+
+- (void)layoutSubviews {
+    %orig;
+    BOOL hideFeedAnchor = DYYYGetBool(@"DYYYHideFeedAnchorContainer");
+    BOOL hideLocation = DYYYGetBool(@"DYYYHideLocation");
+    if (hideFeedAnchor && hideLocation) {
+        self.hidden = YES;
+        return;
+    } else if (hideFeedAnchor || hideLocation) {
+        BOOL isLocation = NO;
+        for (UIView *subview in self.subviews) {
+            if ([subview isKindOfClass:%c(AWEFeedTemplateAnchorView)] || [subview isKindOfClass:%c(AWEPOITradeEntryAnchorView)]) {
+                isLocation = YES;
+                break;
+            }
+        }
+        if ((isLocation && hideLocation) || (!isLocation && hideFeedAnchor)) {
+            self.hidden = YES;
+            return;
+        }
+    }
+}
+
+%end
+
 %hook AWEFeedTemplateAnchorView
 
 - (void)layoutSubviews {
@@ -3645,10 +3665,10 @@ static AWEIMReusableCommonCell *currentCell;
 - (void)didMoveToSuperview {
     %orig;
     if (DYYYGetBool(@"DYYYHidePostView")) {
-    if ([(UIView *)self superview]) {
-        [(UIView *)self setHidden:YES];
+        if ([(UIView *)self superview]) {
+            [(UIView *)self setHidden:YES];
+        }
     }
-}
 }
 
 %end
@@ -4439,7 +4459,8 @@ static AWEIMReusableCommonCell *currentCell;
             }
         }
     }
-    return shouldFilterAds || shouldFilterRecLive || shouldFilterAllLive || shouldFilterHotSpot || shouldFilterHDR || shouldFilterLowLikes || shouldFilterKeywords || shouldFilterProp || shouldFilterTime || shouldFilterUser;
+    return shouldFilterAds || shouldFilterRecLive || shouldFilterAllLive || shouldFilterHotSpot || shouldFilterHDR || shouldFilterLowLikes || shouldFilterKeywords || shouldFilterProp ||
+           shouldFilterTime || shouldFilterUser;
 }
 
 - (AWEECommerceLabel *)ecommerceBelowLabel {
@@ -5296,13 +5317,13 @@ static CGFloat originalTabHeight = 0;
         }
 
         BOOL shouldHideBackground = isHomeSelected || (isFriendsSelected && !hideFriendsButton);
-        
+
         void (^__block traverseSubviews)(UIView *, BOOL) = ^(UIView *view, BOOL hide) {
-            for (UIView *subview in view.subviews) {
-                if (fabs(subview.frame.size.height - tabHeight) < 0.1) {
-                    subview.hidden = hide;
-                }
-            }
+          for (UIView *subview in view.subviews) {
+              if (fabs(subview.frame.size.height - tabHeight) < 0.1) {
+                  subview.hidden = hide;
+              }
+          }
         };
 
         traverseSubviews(self, shouldHideBackground);
@@ -6680,7 +6701,7 @@ static Class TagViewClass = nil;
         return;
     }
     if (DYYYGetBool(@"DYYYHideEntry")) {
-        for(UIView *subview in self.subviews) {
+        for (UIView *subview in self.subviews) {
             subview.hidden = YES;
         }
         return;
