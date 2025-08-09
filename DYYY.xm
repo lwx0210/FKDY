@@ -535,6 +535,10 @@
 %end
 
 %hook AWEFeedTopBarContainer
+- (void)didMoveToSuperview {
+    %orig;
+    applyTopBarTransparency(self);
+}
 - (void)setAlpha:(CGFloat)alpha {
     NSString *transparentValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYTopBarTransparent"];
     if (transparentValue && transparentValue.length > 0) {
@@ -1259,7 +1263,7 @@ static CGFloat rightLabelRightMargin = -1;
                                           }];
                 }
             } else if (![originalText containsString:cityName]) {
-                BOOL isDirectCity = [provinceName isEqualToString:cityName] || ([cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"] || [cityCode hasPrefix:@"99"]);
+                BOOL isDirectCity = [provinceName isEqualToString:cityName] || ([cityCode hasPrefix:@"11"] || [cityCode hasPrefix:@"12"] || [cityCode hasPrefix:@"31"] || [cityCode hasPrefix:@"50"]);
                 if (!self.model.ipAttribution) {
                     if (isDirectCity) {
                         label.text = [NSString stringWithFormat:@"%@  IP属地：%@", originalText, cityName];
@@ -6582,8 +6586,8 @@ static Class TagViewClass = nil;
         if (shouldShiftUp) {
             ty -= targetHeight;
         }
-
-        targetTransform = CGAffineTransformMake(currentScale, 0, 0, currentScale, tx, ty);
+        // 这里控制的是整个 View 的缩放比例，应该始终固定不变的，不然会变小
+        targetTransform = CGAffineTransformMake(1.0, 0, 0, currentScale, tx, ty);
 
         if (!CGAffineTransformEqualToTransform(self.transform, targetTransform)) {
             self.transform = targetTransform;
