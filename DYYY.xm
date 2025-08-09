@@ -4847,7 +4847,7 @@ static AWEIMReusableCommonCell *currentCell;
         if (DYYYGetBool(@"DYYYDoubleInterfaceDownload")) {
             NSString *apiKey = [[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYInterfaceDownload"];
             if (apiKey.length > 0) {
-                AWEUserSheetAction *apiDownloadAction = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"接口保存"
+                AWEUserSheetAction *apiDownloadAction = [NSClassFromString(@"AWEUserSheetAction") actionWithTitle:@"接口解析"
                                                                                                           imgName:nil
                                                                                                           handler:^{
                                                                                                             NSString *shareLink = [awemeModel valueForKey:@"shareURL"];
@@ -4867,7 +4867,7 @@ static AWEIMReusableCommonCell *currentCell;
         if (DYYYGetBool(@"DYYYDoubleCreateVideo") || ![[NSUserDefaults standardUserDefaults] objectForKey:@"DYYYDoubleCreateVideo"]) {
             if (isImageContent) {
                 AWEUserSheetAction *createVideoAction = [NSClassFromString(@"AWEUserSheetAction")
-                    actionWithTitle:@"制作视频"
+                    actionWithTitle:@"视频合成"
                             imgName:nil
                             handler:^{
                               // 收集普通图片URL
