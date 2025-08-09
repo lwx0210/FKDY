@@ -4921,7 +4921,7 @@ static AWEIMReusableCommonCell *currentCell;
                                   completion:^(BOOL success, NSString *message) {
                                     if (success) {
                                     } else {
-                                        [DYYYUtils showToast:[NSString stringWithFormat:@"视频制作失败: %@", message]];
+                                        [DYYYUtils showToast:[NSString stringWithFormat:@"视频合成失败: %@", message]];
                                     }
                                   }];
                             }];
